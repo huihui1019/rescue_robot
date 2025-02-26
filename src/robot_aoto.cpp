@@ -684,14 +684,10 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
  */
 void PART1() {
   if (robot_->team_color == RobotColor::BLUE) {
-    a = 3;
-    b = 0;
-    c = 1;
+    a = 3, b = 0, c = 1;
   } // 蓝方（通过读取拨码快速切换）
   else {
-    a = 0;
-    b = 3;
-    c = 2;
+    a = 0, b = 3, c = 2;
   } // 红方（通过读取拨码快速切换）
   while (robot_->ctrl_state == AUTO_OPERATION) {
     if (notfind != 0) {
@@ -700,15 +696,9 @@ void PART1() {
     }
 
     if (mine < 1) {
-      pd = VisualFindBall(&robot, a,
-                          0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区
-                              // 3,0只找蓝色球 4,0只找黄球 5,0只找黑球
-                              // 0,1除了红球以外的球 3,1除了蓝球以外的球
+      pd = VisualFindBall(&robot, a, 0);
     } else {
-      pd = VisualFindBall(&robot, b,
-                          1); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区
-                              // 3,0只找蓝色球 4,0只找黄球 5,0只找黑球
-                              // 0,1除了红球以外的球 3,1除了蓝球以外的球
+      pd = VisualFindBall(&robot, b, 1);
     }
     if (pd) {
       robot.imu_hold = true; // 陀螺仪保持
