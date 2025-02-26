@@ -9,6 +9,16 @@ namespace auto_ctrl {
 // 角度与弧度转换宏
 #define DEGREE_TO_RADIAN(degree) ((degree) * M_PI / 180.0)
 #define RADIAN_TO_DEGREE(radian) ((radian) * 180.0 / M_PI)
+
+#define robot_left_on 30
+#define robot_right_on -30
+#define robot_left_off -16
+#define robot_right_off 13
+#define camera_angle_up -26
+#define camera_angle_down  -70
+#define distance_speed 0.7
+#define distance_time  0.45
+
 static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，初始为NULL
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL
 struct position *current;                 // 定义当前位置结构体指针
@@ -68,15 +78,14 @@ void WaitStart() {
       /*通过switch(robot.auto_path)选择路径*/
       switch (robot.auto_path) {
       case 1:
-        robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
-        robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
+        robot.servo[0]->setAngle(robot_left_on); // 爪子合拢（框放下）的角度
+        robot.servo[1]->setAngle(robot_right_on);  // 爪子合拢（框放下）的角度
         robot.imu_hold = true;         // 陀螺仪保持
         SetSpeed(0.7, 0, 0, 1.25);     // 向前冲
         robot.imu_hold = false;        // 陀螺仪不保持
         // SetSpeed(0, 0,-7,1.25);//扫尾*1 （把球（物料）撞散）
         // SetSpeed(0, 0,7,1.25);//扫尾*2（把球（物料）撞散）
-        MovePosition(robot.current_pos.x, robot.current_pos.y,
-                     0); // 原地旋转到0度
+        MovePosition(robot.current_pos.x, robot.current_pos.y, 0); // 原地旋转到0度
         // robot.servo[0]->setAngle(30);//爪子张开（框抬起）的角度
         // robot.servo[1]->setAngle(-30);//爪子张开（框抬起）的角度
         // SetSpeed(-0.6, 0, 0,0.5);//向后退
@@ -703,25 +712,25 @@ void PART1() {
       }
       if (pd) {
         robot.imu_hold = true;         // 陀螺仪保持
-        robot.servo[0]->setAngle(30);  // 爪子张开（框抬起）的角度
-        robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
-        SetSpeed(0.7, 0, 0, 0.45);     // 向前冲一段
-        robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
-        robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-        SetSpeed(-0.6, 0, 0, 0.3);     // 向后冲一段
-        robot.servo[2]->setAngle(-70); // 云台舵机向下
+        robot.servo[0]->setAngle(robot_left_on);  // 爪子张开（框抬起）的角度
+        robot.servo[1]->setAngle(robot_right_on); // 爪子张开（框抬起）的角度
+        SetSpeed(distance_speed, 0, 0, distance_time);     // 向前冲一段
+        robot.servo[0]->setAngle(robot_left_off); // 爪子合拢（框放下）的角度
+        robot.servo[1]->setAngle(robot_right_off);  // 爪子合拢（框放下）的角度
+        SetSpeed(-0.6, 0, 0, 0.4);     // 向后冲一段
+        robot.servo[2]->setAngle(camera_angle_down); // 云台舵机向下
         delay(1000);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2) {
-          robot.servo[0]->setAngle(30);  // 爪子张开（框抬起）的角度
-          robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
+          robot.servo[0]->setAngle(robot_left_on);  // 爪子张开（框抬起）的角度
+          robot.servo[1]->setAngle(robot_right_on); // 爪子张开（框抬起）的角度
           SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
-          robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
-          robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-          robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
+          robot.servo[0]->setAngle(robot_left_off); // 爪子合拢（框放下）的角度
+          robot.servo[1]->setAngle(robot_right_off);  // 爪子合拢（框放下）的角度
+          robot.servo[2]->setAngle(camera_angle_up); // 云台舵机向上（抬头）
         } else {
           ++mine;
-          robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
+          robot.servo[2]->setAngle(camera_angle_up); // 云台舵机向上（抬头）
           break;
         }
       } else
@@ -738,8 +747,8 @@ void PART1() {
         // delay(300);// 延时300ms
         corner_angle(); // 调整车身姿态
         // delay(300);// 延时300ms
-        robot.servo[0]->setAngle(30);
-        robot.servo[1]->setAngle(-30);
+        robot.servo[0]->setAngle(robot_left_on);
+        robot.servo[1]->setAngle(robot_right_on);
         // delay(500);// 延时500ms
         home_x = robot_->current_pos.x; // 安全区的里程计相对坐标X刷新
         home_y = robot_->current_pos.y; // 安全区的里程计相对坐标Y刷新
@@ -754,8 +763,8 @@ void PART1() {
     robot.imu_hold = false;        // 陀螺仪保持
     SetSpeed(-0.5, 0, 0, 0.5);     // 后退一段距离
     SetSpeed(0, 0, 0.8, 1.6);      // 后退一段距离
-    robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
-    robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
+    robot.servo[0]->setAngle(robot_left_off); // 爪子合拢（框放下）的角度
+    robot.servo[1]->setAngle(robot_right_off);  // 爪子合拢（框放下）的角度
   }
 }
 void PART2() {

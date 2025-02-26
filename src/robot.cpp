@@ -3,6 +3,13 @@
 
 using namespace CFF;
 
+#define robot_left_on 30
+#define robot_right_on -30
+#define robot_left_off -16
+#define robot_right_off 13
+#define camera_angle_up -26
+#define camera_angle_down  -70
+#define camera_acceleration 150
 Robot_t robot;                   /**< 机器人对象 */
 ChassisKinematics *chassis;      /**< 底盘运动学对象 */
 Gamepad_t *gamepad;              /**< 手柄对象 */
@@ -188,15 +195,15 @@ void setup() {
       new Servo(servo_port, 2, ServoType::SCS, 135, -135); // 创建SCS舵机对象
   robot.servo[2] =
       new Servo(servo_port, 3, ServoType::SCS, 135, -135); // 创建SCS舵机对象
-  robot.servo[0]->setAngle(30); // 设置舵机0的角度为-60度（夹爪张开或框抬起）
-  robot.servo[0]->setAcceleration(150); // 设置舵机0的加速度为150
-  robot.servo[0]->setAngle(30);  // 设置舵机0的角度为-60度（夹爪张开或框抬起）
-  robot.servo[1]->setAngle(-30); // 设置舵机1的角度为124度（夹爪张开或框抬起）
-  robot.servo[1]->setAcceleration(150); // 设置舵机1的加速度为150
-  robot.servo[1]->setAngle(-30); // 设置舵机1的角度为124度（夹爪张开或框抬起）
-  robot.servo[2]->setAngle(-26); // 设置舵机2的角度为108度（云台pitch）
-  robot.servo[2]->setAcceleration(150); // 设置舵机2的加速度为75
-  robot.servo[2]->setAngle(-26);        // 设置舵机2的角度为108度（云台pitch）
+  robot.servo[0]->setAngle(robot_left_on); // 设置舵机0的角度为-60度（夹爪张开或框抬起）
+  robot.servo[0]->setAcceleration(camera_acceleration); // 设置舵机0的加速度为150
+  robot.servo[0]->setAngle(robot_left_on);  // 设置舵机0的角度为-60度（夹爪张开或框抬起）
+  robot.servo[1]->setAngle(robot_right_on); // 设置舵机1的角度为124度（夹爪张开或框抬起）
+  robot.servo[1]->setAcceleration(camera_acceleration); // 设置舵机1的加速度为150
+  robot.servo[1]->setAngle(robot_right_on); // 设置舵机1的角度为124度（夹爪张开或框抬起）
+  robot.servo[2]->setAngle(camera_angle_up); // 设置舵机2的角度为108度（云台pitch）
+  robot.servo[2]->setAcceleration(camera_acceleration); // 设置舵机2的加速度为75
+  robot.servo[2]->setAngle(camera_angle_up);        // 设置舵机2的角度为108度（云台pitch）
 
   /* 机器人启动 */
   audio::playMusic("Startup", false); // 播放启动音乐
