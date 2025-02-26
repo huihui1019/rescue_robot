@@ -700,23 +700,23 @@ void PART1() {
   } // 红方（通过读取拨码快速切换）
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
-      // if (notfind !=0){
-      // switch (notfind)//通过switch的值判断到那个找球点位
-      // {
-      // 	case 1:
-      // 		find1();//移动到点位1
-      // 		break;
-      // 	case 2:
-      // 		find2();//移动到点位2
-      // 		break;
-      // 	case 3:
-      // 		find3();//移动到点位3
-      // 		break;
-      // 	case 4:
-      // 		find4();//移动到点位4
-      // 		break;
-      // }
-      // }
+      if (notfind != 0) {
+        switch (notfind) // 通过switch的值判断到那个找球点位
+        {
+        case 1:
+          find1(); // 移动到点位1
+          break;
+        case 2:
+          find2(); // 移动到点位2
+          break;
+        case 3:
+          find3(); // 移动到点位3
+          break;
+        case 4:
+          find4(); // 移动到点位4
+          break;
+        }
+      }
       if (mine < 1) {
         pd = VisualFindBall(
             &robot, a, 0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区
@@ -762,10 +762,8 @@ void PART1() {
           robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
           // delay(100);                   // 延时100ms
         }
-      }
-      if (!pd && robot_->ctrl_state == AUTO_OPERATION) {
+      } else if (robot_->ctrl_state == AUTO_OPERATION)
         notfind = notfind + 1; // notfind次数叠加(未找到的次数叠加)
-      }
     }
     go_home(); // 通过go_home函数用里程计走到安全区附近
     while (robot_->ctrl_state == AUTO_OPERATION) {
