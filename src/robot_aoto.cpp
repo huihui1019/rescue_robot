@@ -723,7 +723,34 @@ void PART1() {
     } else
       notfind = notfind + 1; // notfind次数叠加(未找到的次数叠加)
     go_home();               // 通过go_home函数用里程计走到安全区附近
+    pd = VisualFindBall(
+        &robot, c,
+        0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区 3,0只找蓝色球
+            // 4,0只找黄球 5,0只找黑球 0,1除了红球以外的球 3,1除了蓝球以外的球
+    if (pd) {
+      robot.imu_hold = true; // 陀螺仪保持
+      // delay(300);// 延时300ms
+      corner_angle(); // 调整车身姿态
+      // delay(300);// 延时300ms
+      robot.servo[0]->setAngle(30);
+      robot.servo[1]->setAngle(-30);
+      // delay(500);// 延时500ms
+      home_x = robot_->current_pos.x; // 安全区的里程计相对坐标X刷新
+      home_y = robot_->current_pos.y; // 安全区的里程计相对坐标Y刷新
+      break;
+    } else {
+      Turn_angle();               // 转向里程计的家的方向
+      robot.imu_hold = true;      // 陀螺仪保持
+      SetSpeed(0.25, 0, 0, 0.75); // 向前冲一段
+      delay(300);                 // 延时300ms
+    }
   }
+  robot.imu_hold = false;        // 陀螺仪保持
+  SetSpeed(-0.5, 0, 0, 0.5);     // 后退一段距离
+  SetSpeed(0, 0, 0.8, 1.6);      // 后退一段距离
+  robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
+  robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
+}
 }
 void PART2() {
   if (io::getIN1()) {
