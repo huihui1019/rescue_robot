@@ -14,8 +14,8 @@ namespace auto_ctrl {
 #define robot_right_on -30
 #define robot_left_off -16
 #define robot_right_off 13
-#define camera_angle_up -26
-#define camera_angle_down  -70
+#define camera_angle_up -35
+#define camera_angle_down  -90
 #define distance_speed 0.7
 #define distance_time  0.45
 
