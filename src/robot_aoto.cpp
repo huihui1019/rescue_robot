@@ -332,10 +332,10 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
     ball_tmp = visual::getBall(i); // 获取视觉下发数据
     dt = (millis() - ball_tmp->timestamp);
     if (ball_tmp->type != 1 && ball_tmp->type != 2 && dt < 100) {
-      if (color != ball_tmp->type)
-        ++find_cnt;
-      else if (4 == ball_tmp->type)
+      if (4 != ball_tmp->type)
         yellow = 1;
+      else if (color == ball_tmp->type)
+        ++find_cnt;
       else
         other = 1;
     }
