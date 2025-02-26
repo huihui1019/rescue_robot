@@ -7,8 +7,8 @@ extern void loop(void);
 
 /**
  * @brief Arduino风格main函数
- * 
- * @return int 
+ *
+ * @return int
  */
 int main(void)
 {
@@ -21,5 +21,3 @@ int main(void)
 
     return RT_EOK;
 }
-
-

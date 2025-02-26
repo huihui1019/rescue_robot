@@ -3,9 +3,9 @@
 
 /**
  * @brief 加速函数, 是控制更平滑
- * 
+ *
  * @param speed_x
- * @param speed_y 
+ * @param speed_y
  */
 void do_acc(float *speed_x, float *speed_y)
 {
@@ -22,13 +22,12 @@ void do_acc(float *speed_x, float *speed_y)
 
     acc_x = tmp_speed_x - last_speed_x;
     acc_y = tmp_speed_y - last_speed_y;
-    acc_whole = sqrt(acc_x * acc_x + acc_y * acc_y) ;
+    acc_whole = sqrt(acc_x * acc_x + acc_y * acc_y);
 
     sin_x = acc_x / acc_whole;
     sin_y = acc_y / acc_whole;
-    
 
-    if(acc_whole > (CHASSIS_MAX_ACC))
+    if (acc_whole > (CHASSIS_MAX_ACC))
     {
         acc_whole = (CHASSIS_MAX_ACC);
         acc_x = acc_whole * sin_x;
@@ -37,16 +36,16 @@ void do_acc(float *speed_x, float *speed_y)
         *speed_y = last_speed_y + acc_y;
     }
     // printf("speed_x %.2f speed_y %.2f\r\n", (*speed_x), (*speed_y));
-    
+
     last_speed_x = *speed_x;
     last_speed_y = *speed_y;
 }
 
 /**
- * @brief 
- * 
- * @param robot 
- * @param chassis 
+ * @brief
+ *
+ * @param robot
+ * @param chassis
  */
 void do_chassis_safe_ctrl(Robot_t *robot, ChassisKinematics *chassis)
 {
@@ -84,7 +83,7 @@ void do_chassis_speed_ctrl(Robot_t *robot, ChassisKinematics *chassis)
         vel.angular_z = robot->set_vel.angular_z;
     }
 
-    //do_acc(&(vel.linear_x), &(vel.linear_y));
+    // do_acc(&(vel.linear_x), &(vel.linear_y));
     chassis->applyMotionCommand(&vel);
     if (chassis->type_ == Chassis::FOUR_WHEEL_OMNI || chassis->type_ == Chassis::FOUR_WHEEL_DIFFERENTIAL)
     {
@@ -111,12 +110,12 @@ void do_chassis_position_ctrl(Robot_t *robot, ChassisKinematics *chassis)
     float linear_x = robot->pid_pos_x.output;
     float linear_y = robot->pid_pos_y.output;
     float angular_z = robot->pid_yaw.output;
-    
+
     float sin_yaw = sin(radians(robot->current_pos.yaw));
     float cos_yaw = cos(radians(robot->current_pos.yaw));
 
     robot->set_vel.linear_x = cos_yaw * linear_x + sin_yaw * linear_y;
-    robot->set_vel.linear_y =-sin_yaw * linear_x + cos_yaw * linear_y;
+    robot->set_vel.linear_y = -sin_yaw * linear_x + cos_yaw * linear_y;
     robot->set_vel.angular_z = angular_z;
 
     do_chassis_speed_ctrl(robot, chassis);
@@ -174,8 +173,8 @@ bool robot_gamepad_is_connect()
 
 /**
  * @brief 机器人控制状态切换
- * 
- * @param robot 
+ *
+ * @param robot
  * @param button_clicked 用于切换的按键，可以是实体按键也可以是手柄按键
  */
 void robot_ctrl_state(Robot_t *robot, bool button_clicked)
@@ -206,8 +205,7 @@ void robot_ctrl_state(Robot_t *robot, bool button_clicked)
         robot->ctrl_state = STARTUP_STATE;
     }
 
-    
-    if(last_state != robot->ctrl_state)
+    if (last_state != robot->ctrl_state)
     {
         /* 切换状态时复位参数，使机器人停下来 */
         robot_reset(robot);
@@ -222,7 +220,7 @@ void robot_ctrl_state(Robot_t *robot, bool button_clicked)
             audio::playMusic("ManualCtrl", false);
             if (robot->team_color == RED)
                 io::setLedColor(LED_COLOR_RED);
-            else if(robot->team_color == BLUE)
+            else if (robot->team_color == BLUE)
                 io::setLedColor(LED_COLOR_BLUE);
             break;
         case AUTO_OPERATION:
@@ -259,7 +257,7 @@ void robot_sensor_update(Robot_t *robot, Gamepad_t *gamepad)
             io::setLedColor(LED_COLOR_BLUE);
         }
     }
-    if (*(uint16_t*)(&last_SGs) != *(uint16_t*)(&robot->SGs))
+    if (*(uint16_t *)(&last_SGs) != *(uint16_t *)(&robot->SGs))
     {
         io::setSG1(robot->SGs.SG1_PWR, robot->SGs.SG1_IO);
         io::setSG2(robot->SGs.SG2_PWR, robot->SGs.SG2_IO);
@@ -296,11 +294,11 @@ void robot_sensor_update(Robot_t *robot, Gamepad_t *gamepad)
 
 /**
  * @brief 机器人位置闭环
- * 
- * @param robot 
- * @param x_pid 
- * @param y_pid 
- * @param yaw_pid 
+ *
+ * @param robot
+ * @param x_pid
+ * @param y_pid
+ * @param yaw_pid
  */
 void robot_pid_calc(Robot_t *robot, PID *x_pid, PID *y_pid, PID *yaw_pid)
 {
@@ -312,12 +310,11 @@ void robot_pid_calc(Robot_t *robot, PID *x_pid, PID *y_pid, PID *yaw_pid)
     robot->pid_pos_y.input = robot->current_pos.y;
     robot->pid_pos_y.setpoint = robot->target_pos.y;
 
-
     // yaw轴过换向点保持角度连续
     if (robot->pid_yaw.setpoint - robot->pid_yaw.input > 180)
     {
         robot->pid_yaw.setpoint -= 360;
-    }  
+    }
     else if (robot->pid_yaw.setpoint - robot->pid_yaw.input < -180)
     {
         robot->pid_yaw.setpoint += 360;
@@ -363,9 +360,5 @@ void robot_reset(Robot_t *robot)
     robot->target_pos.yaw = robot->current_pos.yaw;
 
     /* 舵机等机构复位 */
-    //robot->servo[0]->setAngle(0);
+    // robot->servo[0]->setAngle(0);
 }
-
-
-
-
