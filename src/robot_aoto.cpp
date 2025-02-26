@@ -564,7 +564,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
   uint32_t ct = millis();           // 进入函数初始时间
   robot->imu_hold = false;          // 陀螺仪保持关闭
   robot->chassis_mode = SPEED_MODE; // 小车转换为速度模式
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < 1000; ++i) {
     if ((millis() - ct) > 15000) // 判断超时时间是否大于15秒
     {
       return false; // 返回false
