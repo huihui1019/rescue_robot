@@ -563,7 +563,7 @@ void only_one() {
  * @retuen true 找到并小球坐落在小车视觉模块指定的坐标范围以内
  * @retuen false 未找到 或 寻找时间超时
  */
-bool VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
+uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
   // 定义三个存储时间的变量
   uint32_t dt = 0;                  // 数据更新时间
   uint32_t ft = millis();           // 距离上一次找到的时间
