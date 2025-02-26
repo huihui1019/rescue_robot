@@ -695,6 +695,7 @@ void PART1(){
 				// delay(20);// 延时20ms	
 				robot.servo[0]->setAngle(-16);//爪子合拢（框放下）的角度
 				robot.servo[1]->setAngle(13);//爪子合拢（框放下）的角度
+				SetSpeed(-0.6, 0, 0,0.2);
 				// delay(300);// 延时300ms	
 				mine = mine + 1;// mine次数叠加(找到的次数叠加)
 				break;
