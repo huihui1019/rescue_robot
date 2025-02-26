@@ -329,20 +329,13 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
     {
       delay(1);                      // 延时1ms
       ball_tmp = visual::getBall(i); // 获取视觉下发数据
-      if (pd == 1) { // 判断是color颜色还是除color颜色以外（1不是color颜色）
-        if (color != ball_tmp->type && ball_tmp->type != 1 &&
-            ball_tmp->type != 2) // 判断视觉数据和color是否不同，且不等于1和2
-        {
-          dt = (millis() -
-                ball_tmp->timestamp); // 计算现在时间与数据获取时间的插值
-          if (dt < 100)               // 判断dt是否小于100ms
-          {
+      if (pd == 1 && ball_tmp->type != 1 && ball_tmp->type != 2) {
+        if (color != ball_tmp->type && ball_tmp->type != 4) {
+          dt = (millis() - ball_tmp->timestamp);
+          if (dt < 100) {
             return 1; // 返回 1
           }
-        }
-        if (color == ball_tmp->type && ball_tmp->type != 1 &&
-            ball_tmp->type != 2) // 判断视觉数据和color是否相同，且不等于1和2
-        {
+        } else {
           dt = (millis() -
                 ball_tmp->timestamp); // 计算现在时间与数据获取时间的插值
           if (dt < 100)               // 判断dt是否小于100ms
@@ -562,7 +555,7 @@ void only_one() {
  * @retuen true 找到并小球坐落在小车视觉模块指定的坐标范围以内
  * @retuen false 未找到 或 寻找时间超时
  */
-bool VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
+uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
   // 定义三个存储时间的变量
   uint32_t dt = 0;                  // 数据更新时间
   uint32_t ft = millis();           // 距离上一次找到的时间
@@ -748,7 +741,7 @@ void PART1() {
         SetSpeed(-0.6, 0, 0, 0.2); // 向后冲一段
         delay(1000);// 延时300ms
         robot.servo[2]->setAngle(-70); // 云台舵机向下
-        delay(1000); 
+        delay(1000);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2 == 1) {
           mine = mine + 1;              // mine次数叠加(找到的次数叠加)
@@ -835,27 +828,27 @@ void PART2() {
         robot.servo[2]->setAngle(125); // 云台舵机向下（低头）
         SetSpeed(0.3, 0, 0, 0.35);     // 向前冲一段
         delay(20);
-        robot.servo[0]->setAngle(30);    // 爪子张开（框抬起）的角度
+        robot.servo[0]->setAngle(30);     // 爪子张开（框抬起）的角度
         robot.servo[1]->setAngle(-30);    // 爪子张开（框抬起）的角度
         delay(20);                        // 延时20ms
         SetSpeed(0.35, 0, 0, 0.35);       // 向前冲一段
         delay(20);                        // 延时20ms
         robot.servo[0]->setAngle(-16);    // 爪子合拢（框放下）的角度
-        robot.servo[1]->setAngle(13);    // 爪子合拢（框放下）的角度
+        robot.servo[1]->setAngle(13);     // 爪子合拢（框放下）的角度
         delay(500);                       // 延时300ms
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2 == 1) {
-          mine = mine + 1;              // mine次数叠加(找到的次数叠加)
+          mine = mine + 1;               // mine次数叠加(找到的次数叠加)
           robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
           // delay(100);                   // 延时100ms
           break;
         } else if (pd2 == 2) {
-          robot.servo[0]->setAngle(30); // 爪子张开（框抬起）的角度
+          robot.servo[0]->setAngle(30);  // 爪子张开（框抬起）的角度
           robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
           SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
           robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
-          robot.servo[1]->setAngle(13); // 爪子合拢（框放下）的角度
-          robot.servo[2]->setAngle(-30);  // 云台舵机向上（抬头）
+          robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
+          robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
           // delay(100);                    // 延时100ms
         } else {
           robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
