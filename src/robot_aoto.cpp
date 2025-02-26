@@ -569,7 +569,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
   uint32_t dt = 0;        // 数据更新时间
   uint32_t ft = millis(); // 距离上一次找到的时间
   uint32_t ct = millis(); // 进入函数初始时间
-  static bool rotate_direction;
+  static uint32_t rotate_direction;
   robot->imu_hold = false;          // 陀螺仪保持关闭
   robot->chassis_mode = SPEED_MODE; // 小车转换为速度模式
   for (int i = 0; i < 1000; ++i) {
@@ -674,8 +674,8 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
       if ((millis() - ft) > 250) {   // 判断距离上次找球是否大于250ms
         robot->set_vel.linear_x = 0; // x速度给0
         robot->set_vel.linear_y = 0; // y速度给0
-        robot->set_vel.angular_z = *(float *)&(
-            rotate_direction << 31 & 0x3f800000); // z速度给0.85 (旋转找球)
+		//int tmp = ((rotate_direction & 1) << 31) & 0x3f800000;
+        robot->set_vel.angular_z = (rotate_direction & 1) ? 1 : -1; //*(float *)&tmp; 
         if ((millis() - ft) > 10000)              // 判断距离上一次找球大于10s
         {
           return false; // 返回 false
