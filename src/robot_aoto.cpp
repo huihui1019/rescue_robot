@@ -343,7 +343,7 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
     if (ball_tmp->type != 1 && ball_tmp->type != 2 && dt < 100) {
       if (4 != ball_tmp->type)
         yellow = 1;
-      else if (color == ball_tmp->type)
+      else if (color != ball_tmp->type)
         ++find_cnt;
       else
         other = 1;
