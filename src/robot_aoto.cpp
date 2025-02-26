@@ -689,26 +689,22 @@ void PART1() {
   else {
     a = 0, b = 3, c = 2;
   } // 红方（通过读取拨码快速切换）
-  while (robot_->ctrl_state == AUTO_OPERATION) {
+  while (1) {
     if (notfind != 0) {
       find1();
       notfind = 0;
     }
 
-    if (mine < 1) {
+    if (mine < 2) {
       pd = VisualFindBall(&robot, a, 0);
     } else {
       pd = VisualFindBall(&robot, b, 1);
     }
     if (pd) {
-      robot.imu_hold = true; // 陀螺仪保持
-      // SetSpeed(0.3, 0, 0,0.35);//向前冲一段
-      // delay(20);
+      robot.imu_hold = true;         // 陀螺仪保持
       robot.servo[0]->setAngle(30);  // 爪子张开（框抬起）的角度
       robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
-      // delay(20);// 延时20ms
-      SetSpeed(0.7, 0, 0, 0.45); // 向前冲一段
-      // delay(20);// 延时20ms
+      SetSpeed(0.7, 0, 0, 0.45);     // 向前冲一段
       robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
       robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
       SetSpeed(-0.6, 0, 0, 0.3);     // 向后冲一段
@@ -726,8 +722,8 @@ void PART1() {
       robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
     } else
       notfind = notfind + 1; // notfind次数叠加(未找到的次数叠加)
+    go_home();               // 通过go_home函数用里程计走到安全区附近
   }
-  go_home(); // 通过go_home函数用里程计走到安全区附近
 }
 void PART2() {
   if (io::getIN1()) {
