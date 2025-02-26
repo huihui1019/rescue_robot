@@ -309,46 +309,41 @@ void Turn_angle2() {
  */
 int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
   // 定义两个存储时间的变量
-  uint32_t dt = 0;                             // 数据更新时间
-  uint32_t ct = millis();                      // 进入函数的初始时间
-  while (robot_->ctrl_state == AUTO_OPERATION) // 自动模式下
+  uint32_t dt = 0;           // 数据更新时间
+  uint32_t ct = millis();    // 进入函数的初始时间
+  if ((millis() - ct) > 500) // 判断现在时间与初始时间的差是否大于500
   {
-    if ((millis() - ct) > 500) // 判断现在时间与初始时间的差是否大于500
-    {
-      return false; // 返回 false
-    }
-    if (robot->ctrl_state == MANUAL_OPERATION ||
-        robot->ctrl_state == STARTUP_STATE) {
-      return false; // 切换模式时自动退出
-    }
-    // 初始化视觉检测变量
-    visual_t *ball_tmp = NULL;  // 视觉反馈下发的所有数据集合
-    visual_t *find_ball = NULL; // 最后符合条件的数据集合
-    uint32_t jl = 9999999;      // 定义一个距离变量为无限大即可
-    uint8_t find_cnt = 0;
-    bool yellow = 0;
-    bool other = 0;
-    for (uint8_t i = 0; i < 14; i++) // for循环遍历14次
-    {
-      delay(1);                      // 延时1ms
-      ball_tmp = visual::getBall(i); // 获取视觉下发数据
-      dt = (millis() - ball_tmp->timestamp);
-      if (ball_tmp->type != 1 && ball_tmp->type != 2 && dt < 100) {
-        if (color != ball_tmp->type)
-          ++find_cnt;
-        else if (4 == ball_tmp->type)
-          yellow = 1;
-        else
-          other = 1;
-      }
-    }
-    if (other || ((find_cnt > 1) && yellow))
-      return 2;
-    else
-      return 1;
-    delay(10); // 延时10ms
+    return false; // 返回 false
   }
-  return false; // 返回 false
+  if (robot->ctrl_state == MANUAL_OPERATION ||
+      robot->ctrl_state == STARTUP_STATE) {
+    return false; // 切换模式时自动退出
+  }
+  // 初始化视觉检测变量
+  visual_t *ball_tmp = NULL;  // 视觉反馈下发的所有数据集合
+  visual_t *find_ball = NULL; // 最后符合条件的数据集合
+  uint32_t jl = 9999999;      // 定义一个距离变量为无限大即可
+  uint8_t find_cnt = 0;
+  bool yellow = 0;
+  bool other = 0;
+  for (uint8_t i = 0; i < 14; i++) // for循环遍历14次
+  {
+    delay(1);                      // 延时1ms
+    ball_tmp = visual::getBall(i); // 获取视觉下发数据
+    dt = (millis() - ball_tmp->timestamp);
+    if (ball_tmp->type != 1 && ball_tmp->type != 2 && dt < 100) {
+      if (color != ball_tmp->type)
+        ++find_cnt;
+      else if (4 == ball_tmp->type)
+        yellow = 1;
+      else
+        other = 1;
+    }
+  }
+  if (other || ((find_cnt > 1) && yellow))
+    return 1;
+  else
+    return 0;
 }
 /**
  * @brief 检测安全区的位置
@@ -731,23 +726,15 @@ void PART1() {
         robot.servo[2]->setAngle(-70); // 云台舵机向下
         delay(1000);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
-        if (pd2 == 1) {
-          mine = mine + 1;               // mine次数叠加(找到的次数叠加)
-          robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
-          // delay(100);                   // 延时100ms
-          break;
-        } else if (pd2 == 2) {
+        if (pd2) {
           robot.servo[0]->setAngle(30);  // 爪子张开（框抬起）的角度
           robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
           SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
           robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
           robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-          robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
-          // delay(100);                    // 延时100ms
-        } else {
-          robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
-          // delay(100);                   // 延时100ms
-        }
+        } else
+          ++mine;
+        robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
       } else if (robot_->ctrl_state == AUTO_OPERATION)
         notfind = notfind + 1; // notfind次数叠加(未找到的次数叠加)
     }
