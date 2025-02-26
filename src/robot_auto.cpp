@@ -12,7 +12,7 @@ namespace auto_ctrl {
 static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，初始为NULL
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL
 struct position *current;                 // 定义当前位置结构体指针
-bool VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd); // 找球函数
+uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd); // 找球函数
 void SetSpeed(
     float linear_x, float linear_y, float angular_z,
     float delay_s); // 跑速度的函数（x上的速度，y上速度，z上旋转速度，时间）
@@ -497,9 +497,7 @@ void go_home() {
         sqrt(pow(robot_->current_pos.x - (home_xx + (home_x - 1.05)), 2) +
              pow(robot_->current_pos.y - (home_yy + (home_y + 0.95)), 2));
     ++time2;
-    if (distance < 0.4 or
-        time2 >
-            250) { // 判断目标位置和实际位置差值是否小于0.4m 或 运行时间超出2.5s
+    if (distance < 0.4 or time2 >250) { // 判断目标位置和实际位置差值是否小于0.4m 或 运行时间超出2.5s
       break;       // 退出循环
     }
     delay(10); // 延时10ms
@@ -531,11 +529,11 @@ void go_home() {
 void only_one() {
   while (robot_->ctrl_state == AUTO_OPERATION) {
     if (robot.servo[0]->getAngle() > -16 || robot.servo[1]->getAngle() <13) {
-      robot.servo[0]->setAngle(30); // 爪子张开
-      robot.servo[0]->setAngle(-30); // 爪子张开
-      SetSpeed(-0.6, 0, 0, 0.45);
-      robot.servo[0]->setAngle(-16); // 爪子闭合
-      robot.servo[0]->setAngle(13); // 爪子闭合
+      // robot.servo[0]->setAngle(30); // 爪子张开
+      // robot.servo[0]->setAngle(-30); // 爪子张开
+      // SetSpeed(-0.6, 0, 0, 0.45);
+      // robot.servo[0]->setAngle(-16); // 爪子闭合
+      // robot.servo[0]->setAngle(13); // 爪子闭合
       // delay(500);
     } else {
       break;
@@ -774,7 +772,7 @@ void PART1() {
       if (pd) {
         robot.imu_hold = true; // 陀螺仪保持
         // delay(300);// 延时300ms
-        // corner_angle(); // 调整车身姿态
+        corner_angle(); // 调整车身姿态
         // delay(300);// 延时300ms
         robot.servo[0]->setAngle(30);
         robot.servo[1]->setAngle(-30);
