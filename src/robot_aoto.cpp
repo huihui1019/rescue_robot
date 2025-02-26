@@ -717,12 +717,17 @@ void PART1() {
         SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
         robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-      } else
+        robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
+      } else {
         ++mine;
-      robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
+        robot.servo[2]->setAngle(-26); // 云台舵机向上（抬头）
+        break;
+      }
     } else
       notfind = notfind + 1; // notfind次数叠加(未找到的次数叠加)
-    go_home();               // 通过go_home函数用里程计走到安全区附近
+  }
+  go_home(); // 通过go_home函数用里程计走到安全区附近
+  while (1) {
     pd = VisualFindBall(
         &robot, c,
         0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区 3,0只找蓝色球
@@ -750,7 +755,6 @@ void PART1() {
   SetSpeed(0, 0, 0.8, 1.6);      // 后退一段距离
   robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
   robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-}
 }
 void PART2() {
   if (io::getIN1()) {
