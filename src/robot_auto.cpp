@@ -746,22 +746,23 @@ void PART1() {
         robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
         // delay(300);// 延时300ms
+        robot.servo[2]->setAngle(-70); // 云台舵机向下
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2 == 1) {
           mine = mine + 1;              // mine次数叠加(找到的次数叠加)
-          robot.servo[2]->setAngle(97); // 云台舵机向上（抬头）
+          robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
           // delay(100);                   // 延时100ms
           break;
         } else if (pd2 == 2) {
-          robot.servo[0]->setAngle(-35); // 爪子张开（框抬起）的角度
-          robot.servo[1]->setAngle(100); // 爪子张开（框抬起）的角度
+          robot.servo[0]->setAngle(30); // 爪子张开（框抬起）的角度
+          robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
           SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
-          robot.servo[0]->setAngle(-60); // 爪子合拢（框放下）的角度
-          robot.servo[1]->setAngle(124); // 爪子合拢（框放下）的角度
-          robot.servo[2]->setAngle(97);  // 云台舵机向上（抬头）
+          robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
+          robot.servo[1]->setAngle(13); // 爪子合拢（框放下）的角度
+          robot.servo[2]->setAngle(-30);  // 云台舵机向上（抬头）
           // delay(100);                    // 延时100ms
         } else {
-          robot.servo[2]->setAngle(97); // 云台舵机向上（抬头）
+          robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
           // delay(100);                   // 延时100ms
         }
       }
@@ -790,7 +791,7 @@ void PART1() {
         Turn_angle();               // 转向里程计的家的方向
         robot.imu_hold = true;      // 陀螺仪保持
         SetSpeed(0.25, 0, 0, 0.75); // 向前冲一段
-        delay(300);                 // 延时300ms
+        // delay(300);                 // 延时300ms
       }
     }
     robot.imu_hold = false;        // 陀螺仪保持
@@ -847,31 +848,31 @@ void PART2() {
         robot.servo[2]->setAngle(125); // 云台舵机向下（低头）
         SetSpeed(0.3, 0, 0, 0.35);     // 向前冲一段
         delay(20);
-        robot.servo[0]->setAngle(-35);    // 爪子张开（框抬起）的角度
-        robot.servo[1]->setAngle(100);    // 爪子张开（框抬起）的角度
+        robot.servo[0]->setAngle(30);    // 爪子张开（框抬起）的角度
+        robot.servo[1]->setAngle(-30);    // 爪子张开（框抬起）的角度
         delay(20);                        // 延时20ms
         SetSpeed(0.35, 0, 0, 0.35);       // 向前冲一段
         delay(20);                        // 延时20ms
-        robot.servo[0]->setAngle(-60);    // 爪子合拢（框放下）的角度
-        robot.servo[1]->setAngle(124);    // 爪子合拢（框放下）的角度
+        robot.servo[0]->setAngle(-16);    // 爪子合拢（框放下）的角度
+        robot.servo[1]->setAngle(13);    // 爪子合拢（框放下）的角度
         delay(500);                       // 延时300ms
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2 == 1) {
           mine = mine + 1;              // mine次数叠加(找到的次数叠加)
-          robot.servo[2]->setAngle(97); // 云台舵机向上（抬头）
-          delay(100);                   // 延时100ms
+          robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
+          // delay(100);                   // 延时100ms
           break;
         } else if (pd2 == 2) {
-          robot.servo[0]->setAngle(-35); // 爪子张开（框抬起）的角度
-          robot.servo[1]->setAngle(100); // 爪子张开（框抬起）的角度
+          robot.servo[0]->setAngle(30); // 爪子张开（框抬起）的角度
+          robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
           SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
-          robot.servo[0]->setAngle(-60); // 爪子合拢（框放下）的角度
-          robot.servo[1]->setAngle(124); // 爪子合拢（框放下）的角度
-          robot.servo[2]->setAngle(97);  // 云台舵机向上（抬头）
-          delay(100);                    // 延时100ms
+          robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
+          robot.servo[1]->setAngle(13); // 爪子合拢（框放下）的角度
+          robot.servo[2]->setAngle(-30);  // 云台舵机向上（抬头）
+          // delay(100);                    // 延时100ms
         } else {
-          robot.servo[2]->setAngle(97); // 云台舵机向上（抬头）
-          delay(100);                   // 延时100ms
+          robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
+          // delay(100);                   // 延时100ms
         }
       }
       if (!pd && robot_->ctrl_state == AUTO_OPERATION) {
