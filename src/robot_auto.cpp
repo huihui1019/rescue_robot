@@ -13,9 +13,10 @@ static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，�
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL
 struct position *current;                 // 定义当前位置结构体指针
 bool VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd); // 找球函数
-void SetSpeed(float linear_x, float linear_y, float angular_z,
-              float delay_s); // 跑速度的函数（x上的速度，y上速度，z上旋转速度，时间）
-                              // 建议每次只给一个方向上的速度和时间
+void SetSpeed(
+    float linear_x, float linear_y, float angular_z,
+    float delay_s); // 跑速度的函数（x上的速度，y上速度，z上旋转速度，时间）
+                    // 建议每次只给一个方向上的速度和时间
 void MovePosition(float x, float y,
                   float yaw); // 跑里程计点位（x位置，y位置，yaw轴位置）
 void Turn_angle();            // 控制底盘转向（1.05，-0.95）方向
@@ -745,8 +746,24 @@ void PART1() {
         robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
         // delay(300);// 延时300ms
-        mine = mine + 1; // mine次数叠加(找到的次数叠加)
-        break;
+        pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
+        if (pd2 == 1) {
+          mine = mine + 1;              // mine次数叠加(找到的次数叠加)
+          robot.servo[2]->setAngle(97); // 云台舵机向上（抬头）
+          // delay(100);                   // 延时100ms
+          break;
+        } else if (pd2 == 2) {
+          robot.servo[0]->setAngle(-35); // 爪子张开（框抬起）的角度
+          robot.servo[1]->setAngle(100); // 爪子张开（框抬起）的角度
+          SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
+          robot.servo[0]->setAngle(-60); // 爪子合拢（框放下）的角度
+          robot.servo[1]->setAngle(124); // 爪子合拢（框放下）的角度
+          robot.servo[2]->setAngle(97);  // 云台舵机向上（抬头）
+          // delay(100);                    // 延时100ms
+        } else {
+          robot.servo[2]->setAngle(97); // 云台舵机向上（抬头）
+          // delay(100);                   // 延时100ms
+        }
       }
       if (!pd && robot_->ctrl_state == AUTO_OPERATION) {
         notfind = notfind + 1; // notfind次数叠加(未找到的次数叠加)
