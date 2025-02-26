@@ -2,13 +2,15 @@
 #include "robot_function.h"
 
 using namespace CFF;
-
 #define robot_left_on 30
 #define robot_right_on -30
 #define robot_left_off -16
 #define robot_right_off 13
-#define camera_angle_up -26
-#define camera_angle_down  -70
+#define camera_angle_up -30
+#define camera_angle_down  -76
+#define distance_speed 0.7
+#define distance_time  0.4
+
 #define camera_acceleration 150
 Robot_t robot;                   /**< 机器人对象 */
 ChassisKinematics *chassis;      /**< 底盘运动学对象 */
