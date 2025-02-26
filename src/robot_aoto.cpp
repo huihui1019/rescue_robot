@@ -17,7 +17,7 @@ namespace auto_ctrl {
 #define camera_angle_up -30
 #define camera_angle_down  -76
 #define distance_speed 0.7
-#define distance_time  0.4
+#define distance_time  0.38
 
 static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，初始为NULL
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL
