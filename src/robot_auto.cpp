@@ -537,18 +537,17 @@ void go_home() {
  */
 void only_one() {
   while (robot_->ctrl_state == AUTO_OPERATION) {
-    if (robot.servo[0]->getAngle() > -57) {
-      SetSpeed(0, 0, 2, 0.35); // 向前冲
-      delay(50);
-      robot.servo[0]->setAngle(-45); // 爪子张开
-      delay(100);
-      SetSpeed(-0.07, 0, 0, 0.25);   // 向前冲
-      robot.servo[0]->setAngle(-62); // 爪子闭合
-      delay(500);
+    if (robot.servo[0]->getAngle() > -16 || robot.servo[1]->getAngle() <13) {
+      robot.servo[0]->setAngle(30); // 爪子张开
+      robot.servo[0]->setAngle(-30); // 爪子张开
+      SetSpeed(-0.6, 0, 0, 0.45);
+      robot.servo[0]->setAngle(-16); // 爪子闭合
+      robot.servo[0]->setAngle(13); // 爪子闭合
+      // delay(500);
     } else {
       break;
     }
-    delay(50);
+    // delay(50);
   }
   return;
 }
@@ -745,22 +744,23 @@ void PART1() {
         // delay(20);// 延时20ms
         robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-        SetSpeed(-1, 0, 0, 0.2); // 向后冲一段
-        delay(300);// 延时300ms
+        delay(1000);// 延时300ms
+        SetSpeed(-0.6, 0, 0, 0.2); // 向后冲一段
+        delay(1000);// 延时300ms
         robot.servo[2]->setAngle(-70); // 云台舵机向下
         delay(1000); 
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2 == 1) {
           mine = mine + 1;              // mine次数叠加(找到的次数叠加)
+          robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
+          // delay(100);                   // 延时100ms
+          break;
+        } else if (pd2 == 2) {
           robot.servo[0]->setAngle(30); // 爪子张开（框抬起）的角度
           robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
           SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
           robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
           robot.servo[1]->setAngle(13); // 爪子合拢（框放下）的角度
-          robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
-          // delay(100);                   // 延时100ms
-          break;
-        } else if (pd2 == 2) {
           robot.servo[2]->setAngle(-30);  // 云台舵机向上（抬头）
           // delay(100);                    // 延时100ms
         } else {
@@ -781,7 +781,7 @@ void PART1() {
       if (pd) {
         robot.imu_hold = true; // 陀螺仪保持
         // delay(300);// 延时300ms
-        corner_angle(); // 调整车身姿态
+        // corner_angle(); // 调整车身姿态
         // delay(300);// 延时300ms
         robot.servo[0]->setAngle(30);
         robot.servo[1]->setAngle(-30);
