@@ -1,6 +1,6 @@
-#include <rtthread.h>
-#include <rtdevice.h>
 #include <board.h>
+#include <rtdevice.h>
+#include <rtthread.h>
 
 extern void setup(void);
 extern void loop(void);
@@ -10,14 +10,12 @@ extern void loop(void);
  *
  * @return int
  */
-int main(void)
-{
-    setup();
+int main(void) {
+  setup();
 
-    while (true)
-    {
-        loop();
-    }
+  while (true) {
+    loop();
+  }
 
-    return RT_EOK;
+  return RT_EOK;
 }
