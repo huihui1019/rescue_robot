@@ -741,12 +741,12 @@ void PART1() {
         robot.servo[0]->setAngle(30);  // 爪子张开（框抬起）的角度
         robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
         // delay(20);// 延时20ms
-        SetSpeed(0.6, 0, 0, 0.45); // 向前冲一段
-        // delay(20);// 延时20ms
+        SetSpeed(0.6, 0, 0, 0.47); // 向前冲一段
+        delay(200);// 延时20ms
         robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-        SetSpeed(-0.6, 0, 0, 0.2);
-        // delay(300);// 延时300ms
+        delay(300);// 延时300ms
+        SetSpeed(-0.6, 0, 0, 0.3);
         mine = mine + 1; // mine次数叠加(找到的次数叠加)
         break;
       }
