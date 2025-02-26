@@ -574,11 +574,10 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
       return false; // 切换模式自动退出
     }
     // 初始化视觉检测变量
-    visual_t *ball_tmp = NULL;       // 视觉反馈下发的所有数据集合
-    visual_t *find_ball = NULL;      // 最后符合条件的数据集合
-    uint32_t jl = 9999999;           // 定义一个距离变量为无限大即可
-    for (uint8_t i = 0; i < 14; i++) // for循环遍历14次
-    {
+    visual_t *ball_tmp = NULL;  // 视觉反馈下发的所有数据集合
+    visual_t *find_ball = NULL; // 最后符合条件的数据集合
+    uint32_t jl = 9999999;      // 定义一个距离变量为无限大即可
+    for (uint8_t i = 0; i < 14; i++) {
       ball_tmp = visual::getBall(i); // 获取视觉下发数据
       if (pd == 0) { // 判断是color颜色还是除color颜色以外（0是color颜色）
         if (color == ball_tmp->type) // 判断寻找颜色是否相符
@@ -680,6 +679,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
     }
     delay(10); // 延时10ms
   }
+  return 0;
 }
 /**
  * @brief 找球逻辑part1（案例）
