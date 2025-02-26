@@ -15,9 +15,9 @@ namespace auto_ctrl {
 #define robot_left_off -16
 #define robot_right_off 13
 #define camera_angle_up -35
-#define camera_angle_down  -90
+#define camera_angle_down -90
 #define distance_speed 0.7
-#define distance_time  0.45
+#define distance_time 0.45
 
 static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，初始为NULL
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL
@@ -78,14 +78,15 @@ void WaitStart() {
       /*通过switch(robot.auto_path)选择路径*/
       switch (robot.auto_path) {
       case 1:
-        robot.servo[0]->setAngle(robot_left_on); // 爪子合拢（框放下）的角度
-        robot.servo[1]->setAngle(robot_right_on);  // 爪子合拢（框放下）的角度
-        robot.imu_hold = true;         // 陀螺仪保持
-        SetSpeed(0.7, 0, 0, 1.25);     // 向前冲
-        robot.imu_hold = false;        // 陀螺仪不保持
+        robot.servo[0]->setAngle(robot_left_on);  // 爪子合拢（框放下）的角度
+        robot.servo[1]->setAngle(robot_right_on); // 爪子合拢（框放下）的角度
+        robot.imu_hold = true;                    // 陀螺仪保持
+        SetSpeed(0.7, 0, 0, 1.25);                // 向前冲
+        robot.imu_hold = false;                   // 陀螺仪不保持
         // SetSpeed(0, 0,-7,1.25);//扫尾*1 （把球（物料）撞散）
         // SetSpeed(0, 0,7,1.25);//扫尾*2（把球（物料）撞散）
-        MovePosition(robot.current_pos.x, robot.current_pos.y, 0); // 原地旋转到0度
+        MovePosition(robot.current_pos.x, robot.current_pos.y,
+                     0); // 原地旋转到0度
         // robot.servo[0]->setAngle(30);//爪子张开（框抬起）的角度
         // robot.servo[1]->setAngle(-30);//爪子张开（框抬起）的角度
         // SetSpeed(-0.6, 0, 0,0.5);//向后退
@@ -341,18 +342,22 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
     ball_tmp = visual::getBall(i); // 获取视觉下发数据
     dt = (millis() - ball_tmp->timestamp);
     if (ball_tmp->type != 1 && ball_tmp->type != 2 && dt < 100) {
-      if (4 != ball_tmp->type)
+      ++find_cnt;
+      if (4 == ball_tmp->type)
         yellow = 1;
-      else if (color != ball_tmp->type)
-        ++find_cnt;
-      else
+      else if (color == ball_tmp->type)
         other = 1;
     }
   }
-  if (other || ((find_cnt > 1) && yellow))
+  if (find_cnt) {
+    if (other)
+      return 1;
+    if (find_cnt > 1 && yellow)
+      return 1;
+  } else
     return 1;
-  else
-    return 0;
+
+  return 0;
 }
 /**
  * @brief 检测安全区的位置
@@ -711,22 +716,22 @@ void PART1() {
         pd = VisualFindBall(&robot, b, 1);
       }
       if (pd) {
-        robot.imu_hold = true;         // 陀螺仪保持
+        robot.imu_hold = true;                    // 陀螺仪保持
         robot.servo[0]->setAngle(robot_left_on);  // 爪子张开（框抬起）的角度
         robot.servo[1]->setAngle(robot_right_on); // 爪子张开（框抬起）的角度
-        SetSpeed(distance_speed, 0, 0, distance_time);     // 向前冲一段
-        robot.servo[0]->setAngle(robot_left_off); // 爪子合拢（框放下）的角度
-        robot.servo[1]->setAngle(robot_right_off);  // 爪子合拢（框放下）的角度
-        SetSpeed(-0.6, 0, 0, 0.4);     // 向后冲一段
+        SetSpeed(distance_speed, 0, 0, distance_time); // 向前冲一段
+        robot.servo[0]->setAngle(robot_left_off);    // 爪子合拢（框放下）的角度
+        robot.servo[1]->setAngle(robot_right_off);   // 爪子合拢（框放下）的角度
+        SetSpeed(-0.6, 0, 0, 0.4);                   // 向后冲一段
         robot.servo[2]->setAngle(camera_angle_down); // 云台舵机向下
         delay(1000);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2) {
-          robot.servo[0]->setAngle(robot_left_on);  // 爪子张开（框抬起）的角度
-          robot.servo[1]->setAngle(robot_right_on); // 爪子张开（框抬起）的角度
-          SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
-          robot.servo[0]->setAngle(robot_left_off); // 爪子合拢（框放下）的角度
-          robot.servo[1]->setAngle(robot_right_off);  // 爪子合拢（框放下）的角度
+          robot.servo[0]->setAngle(robot_left_on);   // 爪子张开（框抬起）的角度
+          robot.servo[1]->setAngle(robot_right_on);  // 爪子张开（框抬起）的角度
+          SetSpeed(-0.25, 0, 0, 0.4);                // 向后移一段
+          robot.servo[0]->setAngle(robot_left_off);  // 爪子合拢（框放下）的角度
+          robot.servo[1]->setAngle(robot_right_off); // 爪子合拢（框放下）的角度
           robot.servo[2]->setAngle(camera_angle_up); // 云台舵机向上（抬头）
         } else {
           ++mine;
@@ -760,11 +765,11 @@ void PART1() {
         delay(300);                 // 延时300ms
       }
     }
-    robot.imu_hold = false;        // 陀螺仪保持
-    SetSpeed(-0.5, 0, 0, 0.5);     // 后退一段距离
-    SetSpeed(0, 0, 0.8, 1.6);      // 后退一段距离
-    robot.servo[0]->setAngle(robot_left_off); // 爪子合拢（框放下）的角度
-    robot.servo[1]->setAngle(robot_right_off);  // 爪子合拢（框放下）的角度
+    robot.imu_hold = false;                    // 陀螺仪保持
+    SetSpeed(-0.5, 0, 0, 0.5);                 // 后退一段距离
+    SetSpeed(0, 0, 0.8, 1.6);                  // 后退一段距离
+    robot.servo[0]->setAngle(robot_left_off);  // 爪子合拢（框放下）的角度
+    robot.servo[1]->setAngle(robot_right_off); // 爪子合拢（框放下）的角度
   }
 }
 void PART2() {
