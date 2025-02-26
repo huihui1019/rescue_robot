@@ -15,7 +15,7 @@ namespace auto_ctrl {
 #define robot_left_off -16
 #define robot_right_off 13
 #define camera_angle_up -30
-#define camera_angle_down  -76
+#define camera_angle_down -76
 #define distance_speed 0.7
 #define distance_time  0.38
 
@@ -334,8 +334,7 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
   visual_t *find_ball = NULL; // 最后符合条件的数据集合
   uint32_t jl = 9999999;      // 定义一个距离变量为无限大即可
   uint8_t find_cnt = 0;
-  bool yellow = 0;
-  bool other = 0;
+  bool yellow = 0, other = 0;
   for (uint8_t i = 0; i < 14; i++) // for循环遍历14次
   {
     delay(1);                      // 延时1ms
@@ -349,14 +348,13 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
         other = 1;
     }
   }
-  if (find_cnt) {
-    if (other)
-      return 1;
-    if (find_cnt > 1 && yellow)
-      return 1;
-  } else
-    return 1;
 
+  if (!find_cnt)
+    return 1;
+  if (other)
+    return 1;
+  if (find_cnt > 1 && yellow)
+    return 1;
   return 0;
 }
 /**
@@ -508,9 +506,9 @@ void go_home() {
              pow(robot_->current_pos.y - (home_yy + (home_y + 0.95)), 2));
     ++time2;
     if (distance < 0.4 or
-        time2 >
-            250) { // 判断目标位置和实际位置差值是否小于0.4m 或 运行时间超出2.5s
-      break;       // 退出循环
+        time2 > 250) { // 判断目标位置和实际位置差值是否小于0.4m
+                       // 或 运行时间超出2.5s
+      break;           // 退出循环
     }
     delay(10); // 延时10ms
   }
@@ -603,7 +601,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
             } else {
               xx = 160 -
                    (ball_tmp->x +
-                    ball_tmp->w / 2); // 320*320  理想情况是160装歪可能需要略调
+                    ball_tmp->w / 2); // 320*320 理想情况是160装歪可能需要略调
             }
             yy = 160 -
                  (ball_tmp->y +
@@ -630,10 +628,10 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
               int16_t yy;
               xx = 160 -
                    (ball_tmp->x +
-                    ball_tmp->w / 2); // 320*320  理想情况是160装歪可能需要略调
+                    ball_tmp->w / 2); // 320*320 理想情况是160装歪可能需要略调
               yy = 160 -
                    (ball_tmp->y +
-                    ball_tmp->h / 2); // 320*320  理想情况是160装歪可能需要略调
+                    ball_tmp->h / 2); // 320*320 理想情况是160装歪可能需要略调
               if (((xx * xx) + (yy * yy)) < jl) // 计算距离的是否小于jl
               {
                 find_ball = ball_tmp;       // 更新找到球的数据集合
@@ -655,7 +653,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
         x = 160 - (find_ball->x + find_ball->w / 2); // 不可调
       } else {
         x = 160 - (find_ball->x +
-                   find_ball->w / 2); // 320*320  理想情况是160装歪可能需要略调
+                   find_ball->w / 2); // 320*320 理想情况是160装歪可能需要略调
       }
       y = 160 - (find_ball->y +
                  find_ball->h / 2); // 320*320  理想情况是160装歪可能需要略调
@@ -743,10 +741,10 @@ void PART1() {
     }
     go_home(); // 通过go_home函数用里程计走到安全区附近
     while (1) {
-      pd = VisualFindBall(
-          &robot, c,
-          0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区 3,0只找蓝色球
-              // 4,0只找黄球 5,0只找黑球 0,1除了红球以外的球 3,1除了蓝球以外的球
+      pd = VisualFindBall(&robot, c,
+                          0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区
+                              // 3,0只找蓝色球 4,0只找黄球 5,0只找黑球
+                              // 0,1除了红球以外的球 3,1除了蓝球以外的球
       if (pd) {
         robot.imu_hold = true; // 陀螺仪保持
         // delay(300);// 延时300ms
@@ -851,10 +849,10 @@ void PART2() {
     }
     go_home(); // 通过go_home函数用里程计走到安全区附近
     while (robot_->ctrl_state == AUTO_OPERATION) {
-      pd = VisualFindBall(
-          &robot, c,
-          0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区 3,0只找蓝色球
-              // 4,0只找黄球 5,0只找黑球 0,1除了红球以外的球 3,1除了蓝球以外的球
+      pd = VisualFindBall(&robot, c,
+                          0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区
+                              // 3,0只找蓝色球 4,0只找黄球 5,0只找黑球
+                              // 0,1除了红球以外的球 3,1除了蓝球以外的球
       if (pd) {
         robot.imu_hold = true;          // 陀螺仪保持
         delay(300);                     // 延时300ms
