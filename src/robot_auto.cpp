@@ -342,7 +342,7 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
           other = 1;
       }
     }
-    if (other || fint_cnt > 1 && yellow)
+    if (other || ((find_cnt > 1) && yellow))
       return 2;
     else
       return 1;
