@@ -727,9 +727,7 @@ void PART1() {
         // delay(20);// 延时20ms
         robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-        delay(1000);                   // 延时300ms
         SetSpeed(-0.6, 0, 0, 0.3);     // 向后冲一段
-        delay(1000);                   // 延时300ms
         robot.servo[2]->setAngle(-70); // 云台舵机向下
         delay(1000);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
