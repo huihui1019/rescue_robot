@@ -17,7 +17,7 @@ namespace auto_ctrl {
 #define camera_angle_up -30
 #define camera_angle_down -76
 #define distance_speed 0.7
-#define distance_time 0.4
+#define distance_time  0.38
 
 static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，初始为NULL
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL
@@ -723,9 +723,9 @@ void PART1() {
         SetSpeed(distance_speed, 0, 0, distance_time); // 向前冲一段
         robot.servo[0]->setAngle(robot_left_off);    // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(robot_right_off);   // 爪子合拢（框放下）的角度
-        SetSpeed(-0.6, 0, 0, 0.4);                   // 向后冲一段
+        SetSpeed(-0.7, 0, 0, 0.3);                   // 向后冲一段
         robot.servo[2]->setAngle(camera_angle_down); // 云台舵机向下
-        delay(1000);
+        delay(500);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2) {
           robot.servo[0]->setAngle(robot_left_on);   // 爪子张开（框抬起）的角度
