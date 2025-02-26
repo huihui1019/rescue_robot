@@ -815,21 +815,6 @@ void PART2() {
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
       if (notfind != 0) {
-        switch (notfind) // 通过switch的值判断到那个找球点位
-        {
-        case 1:
-          find1(); // 移动到点位1
-          break;
-        case 2:
-          find2(); // 移动到点位2
-          break;
-        case 3:
-          find3(); // 移动到点位3
-          break;
-        case 4:
-          find4(); // 移动到点位4
-          break;
-        }
       }
       if (mine < 2) {
         pd = VisualFindBall(
