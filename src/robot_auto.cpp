@@ -322,29 +322,30 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
       return false; // 切换模式时自动退出
     }
     // 初始化视觉检测变量
-    visual_t *ball_tmp = NULL;       // 视觉反馈下发的所有数据集合
-    visual_t *find_ball = NULL;      // 最后符合条件的数据集合
-    uint32_t jl = 9999999;           // 定义一个距离变量为无限大即可
+    visual_t *ball_tmp = NULL;  // 视觉反馈下发的所有数据集合
+    visual_t *find_ball = NULL; // 最后符合条件的数据集合
+    uint32_t jl = 9999999;      // 定义一个距离变量为无限大即可
+    uint8_t find_cnt = 0;
+    bool yellow = 0;
+    bool other = 0;
     for (uint8_t i = 0; i < 14; i++) // for循环遍历14次
     {
       delay(1);                      // 延时1ms
       ball_tmp = visual::getBall(i); // 获取视觉下发数据
-      if (pd == 1 && ball_tmp->type != 1 && ball_tmp->type != 2) {
-        if (color != ball_tmp->type && ball_tmp->type != 4) {
-          dt = (millis() - ball_tmp->timestamp);
-          if (dt < 100) {
-            return 1; // 返回 1
-          }
-        } else {
-          dt = (millis() -
-                ball_tmp->timestamp); // 计算现在时间与数据获取时间的插值
-          if (dt < 100)               // 判断dt是否小于100ms
-          {
-            return 2; // 返回 2
-          }
-        }
+      dt = (millis() - ball_tmp->timestamp);
+      if (ball_tmp->type != 1 && ball_tmp->type != 2 && dt < 100) {
+        if (color != ball_tmp->type)
+          ++find_cnt;
+        else if (4 == ball_tmp->type)
+          yellow = 1;
+        else
+          other = 1;
       }
     }
+    if (other || fint_cnt > 1 && yellow)
+      return 2;
+    else
+      return 1;
     delay(10); // 延时10ms
   }
   return false; // 返回 false
@@ -497,7 +498,9 @@ void go_home() {
         sqrt(pow(robot_->current_pos.x - (home_xx + (home_x - 1.05)), 2) +
              pow(robot_->current_pos.y - (home_yy + (home_y + 0.95)), 2));
     ++time2;
-    if (distance < 0.4 or time2 >250) { // 判断目标位置和实际位置差值是否小于0.4m 或 运行时间超出2.5s
+    if (distance < 0.4 or
+        time2 >
+            250) { // 判断目标位置和实际位置差值是否小于0.4m 或 运行时间超出2.5s
       break;       // 退出循环
     }
     delay(10); // 延时10ms
@@ -528,7 +531,7 @@ void go_home() {
  */
 void only_one() {
   while (robot_->ctrl_state == AUTO_OPERATION) {
-    if (robot.servo[0]->getAngle() > -16 || robot.servo[1]->getAngle() <13) {
+    if (robot.servo[0]->getAngle() > -16 || robot.servo[1]->getAngle() < 13) {
       // robot.servo[0]->setAngle(30); // 爪子张开
       // robot.servo[0]->setAngle(-30); // 爪子张开
       // SetSpeed(-0.6, 0, 0, 0.45);
@@ -735,24 +738,24 @@ void PART1() {
         // delay(20);// 延时20ms
         robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
-        delay(1000);// 延时300ms
-        SetSpeed(-0.6, 0, 0, 0.2); // 向后冲一段
-        delay(1000);// 延时300ms
+        delay(1000);                   // 延时300ms
+        SetSpeed(-0.6, 0, 0, 0.2);     // 向后冲一段
+        delay(1000);                   // 延时300ms
         robot.servo[2]->setAngle(-70); // 云台舵机向下
         delay(1000);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2 == 1) {
-          mine = mine + 1;              // mine次数叠加(找到的次数叠加)
+          mine = mine + 1;               // mine次数叠加(找到的次数叠加)
           robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
           // delay(100);                   // 延时100ms
           break;
         } else if (pd2 == 2) {
-          robot.servo[0]->setAngle(30); // 爪子张开（框抬起）的角度
+          robot.servo[0]->setAngle(30);  // 爪子张开（框抬起）的角度
           robot.servo[1]->setAngle(-30); // 爪子张开（框抬起）的角度
           SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
           robot.servo[0]->setAngle(-16); // 爪子合拢（框放下）的角度
-          robot.servo[1]->setAngle(13); // 爪子合拢（框放下）的角度
-          robot.servo[2]->setAngle(-30);  // 云台舵机向上（抬头）
+          robot.servo[1]->setAngle(13);  // 爪子合拢（框放下）的角度
+          robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
           // delay(100);                    // 延时100ms
         } else {
           robot.servo[2]->setAngle(-30); // 云台舵机向上（抬头）
