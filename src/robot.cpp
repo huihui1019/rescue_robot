@@ -195,7 +195,7 @@ void setup() {
   robot.servo[1]->setAcceleration(150); // 设置舵机1的加速度为150
   robot.servo[1]->setAngle(-30); // 设置舵机1的角度为124度（夹爪张开或框抬起）
   robot.servo[2]->setAngle(-30); // 设置舵机2的角度为108度（云台pitch）
-  robot.servo[2]->setAcceleration(400); // 设置舵机2的加速度为75
+  robot.servo[2]->setAcceleration(255); // 设置舵机2的加速度为75
   robot.servo[2]->setAngle(-30);        // 设置舵机2的角度为108度（云台pitch）
 
   /* 机器人启动 */
