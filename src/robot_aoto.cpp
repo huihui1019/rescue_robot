@@ -10,14 +10,7 @@ namespace auto_ctrl {
 #define DEGREE_TO_RADIAN(degree) ((degree) * M_PI / 180.0)
 #define RADIAN_TO_DEGREE(radian) ((radian) * 180.0 / M_PI)
 
-#define robot_left_on 30
-#define robot_right_on -30
-#define robot_left_off -13
-#define robot_right_off 10
-#define camera_angle_up -22
-#define camera_angle_down -76
-#define distance_speed 0.6
-#define distance_time 0.5
+
 
 static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，初始为NULL
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL

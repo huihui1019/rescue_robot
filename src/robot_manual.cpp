@@ -35,12 +35,12 @@ void General(Robot_t *robot, Gamepad_t *gamepad) {
   } else if (IS_BUTTON_CLICKED(gamepad->buttons, robot->last_buttons,
                                GAMEPAD_XBOX_BUTTON_B)) {
     if (a == 0) {
-      robot->servo[0]->setAngle(-60); // 爪子合拢（框放下）的角度
-      robot->servo[1]->setAngle(124); // 爪子合拢（框放下）的角度
+      robot->servo[0]->setAngle(robot_left_on); // 爪子合拢（框放下）的角度
+      robot->servo[1]->setAngle(robot_right_on); // 爪子合拢（框放下）的角度
       a = 1;
     } else {
-      robot->servo[0]->setAngle(-40); // 爪子张开（框抬起）的角度
-      robot->servo[1]->setAngle(104); // 爪子张开（框抬起）的角度
+      robot->servo[0]->setAngle(robot_left_off); // 爪子张开（框抬起）的角度
+      robot->servo[1]->setAngle(robot_right_off); // 爪子张开（框抬起）的角度
       a = 0;
     }
   } else if (IS_BUTTON_CLICKED(gamepad->buttons, robot->last_buttons,
