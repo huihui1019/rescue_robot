@@ -73,7 +73,7 @@ void WaitStart() {
         robot.servo[0]->setAngle(robot_left_on);  // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(robot_right_on); // 爪子合拢（框放下）的角度
         robot.imu_hold = true;                    // 陀螺仪保持
-        SetSpeed(0.7, 0, 0, 1.25);                // 向前冲
+        SetSpeed(0.7, 0, 0, 0.8);                // 向前冲
         robot.imu_hold = false;                   // 陀螺仪不保持
         // SetSpeed(0, 0,-7,1.25);//扫尾*1 （把球（物料）撞散）
         // SetSpeed(0, 0,7,1.25);//扫尾*2（把球（物料）撞散）
@@ -90,7 +90,7 @@ void WaitStart() {
       robot.servo[0]->setAngle(robot_left_on);  // 爪子合拢（框放下）的角度
       robot.servo[1]->setAngle(robot_right_on); // 爪子合拢（框放下）的角度
       robot.imu_hold = true;                    // 陀螺仪保持
-      SetSpeed(0.7, 0, 0, 1.25);                // 向前冲
+      SetSpeed(0.7, 0, 0, 0.8);                // 向前冲
       robot.imu_hold = false;                   // 陀螺仪不保持
       MovePosition(robot.current_pos.x, robot.current_pos.y, 0); // 原地旋转到0度
       PART2();                      // 自动路径1
@@ -705,8 +705,8 @@ void PART1() {
   } // 红方（通过读取拨码快速切换）
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
-      if (notfind != 0)
-        SetSpeed(-0.7, 0, 0, 0.3);
+      if (notfind)
+        SetSpeed(-0.4, 0, 0, 0.4);
 
       if (mine < 2) {
         pd = VisualFindBall(&robot, a, 0);
@@ -722,7 +722,7 @@ void PART1() {
         robot.servo[0]->setAngle(robot_left_off);    // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(robot_right_off);   // 爪子合拢（框放下）的角度
         delay(100);
-        SetSpeed(-0.7, 0, 0, 0.5);                   // 向后冲一段
+        SetSpeed(-1, 0, 0, 0.26);                   // 向后冲一段
         robot.servo[2]->setAngle(camera_angle_down); // 云台舵机向下
         delay(500);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色

@@ -176,10 +176,14 @@ void setup() {
       new HubMotor(motor_port, LEFT_BACK_MOTOR_ID); // 创建左后电机对象
   robot.motor[3] =
       new HubMotor(motor_port, RIGHT_BACK_MOTOR_ID); // 创建右后电机对象
-  robot.motor[0]->setPid(1, 20, 0.8); // 设置左前电机PID参数 24V 0.3 12V 0.8
-  robot.motor[1]->setPid(1, 20, 0.8); // 设置右前电机PID参数 24V 0.3 12V 0.8
-  robot.motor[2]->setPid(1, 20, 0.8); // 设置左后电机PID参数 24V 0.3 12V 0.8
-  robot.motor[3]->setPid(1, 20, 0.8); // 设置右后电机PID参数 24V 0.3 12V 0.8
+  // robot.motor[0]->setPid(1, 20, 0.8); // 设置左前电机PID参数 24V 0.3 12V 0.8
+  // robot.motor[1]->setPid(1, 20, 0.8); // 设置右前电机PID参数 24V 0.3 12V 0.8
+  // robot.motor[2]->setPid(1, 20, 0.8); // 设置左后电机PID参数 24V 0.3 12V 0.8
+  // robot.motor[3]->setPid(1, 20, 0.8); // 设置右后电机PID参数 24V 0.3 12V 0.8
+  robot.motor[0]->setPid(1, 20, 0.3); // 设置左前电机PID参数 24V 0.3 12V 0.8
+  robot.motor[1]->setPid(1, 20, 0.3); // 设置右前电机PID参数 24V 0.3 12V 0.8
+  robot.motor[2]->setPid(1, 20, 0.3); // 设置左后电机PID参数 24V 0.3 12V 0.8
+  robot.motor[3]->setPid(1, 20, 0.3); // 设置右后电机PID参数 24V 0.3 12V 0.8
 
   /* 创建舵机对象 */
   // STS 舵机创建方式 new Servo(servo_port, 1)
