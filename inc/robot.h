@@ -8,8 +8,8 @@
 
 #define robot_left_on 30
 #define robot_right_on -30
-#define robot_left_off -14
-#define robot_right_off 11
+#define robot_left_off -9
+#define robot_right_off 10
 #define camera_angle_up -26
 #define camera_angle_down -76
 #define distance_speed 0.65

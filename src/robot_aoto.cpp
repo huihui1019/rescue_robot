@@ -449,7 +449,7 @@ void corner_angle() {
         SetSpeed(-0.3, 0, 0, 0.75); // 向后倒退一段时间
         MovePosition(robot_->current_pos.x, robot_->current_pos.y,
                      -90);         // 小车姿态保持-90度
-        SetSpeed(0.25, 0, 0, 1.5); // 向前移动一段时间
+        SetSpeed(0.2, 0, 0, 1.5); // 向前移动一段时间
       }
       if (last_angle1 > -90.0) // 判断旋转前角度是否小于 -90度
       {
@@ -458,7 +458,7 @@ void corner_angle() {
         SetSpeed(0.3, 0, 0, 0.75); // 向前移动一段时间
         MovePosition(robot_->current_pos.x, robot_->current_pos.y,
                      -90);         // 小车姿态保持-90度
-        SetSpeed(0.25, 0, 0, 1.5); // 向前移动一段时间
+        SetSpeed(0.2, 0, 0, 1.5); // 向前移动一段时间
       }
     }
   } else if (fabs((robot_->current_pos.yaw)) <
@@ -469,7 +469,7 @@ void corner_angle() {
     robot_->target_pos.y = robot_->current_pos.y; // y目标位置为现在位置
     robot_->target_pos.yaw = LIMIT_ANGLE_180(0);  // 车身旋转至0
     delay(700);                                   // 延时700ms
-    SetSpeed(0.25, 0, 0, 1.5);                    // 向前开一段距离
+    SetSpeed(0.2, 0, 0, 1.5);                    // 向前开一段距离
   } else if (fabs(fabs(robot_->current_pos.yaw) - 180) <
              60) {                     // 判断车的姿态绝对值是否为120-240度
     robot.imu_hold = true;             // 陀螺仪保持
@@ -478,7 +478,7 @@ void corner_angle() {
     robot_->target_pos.y = robot_->current_pos.y;  // y目标位置为现在位置
     robot_->target_pos.yaw = LIMIT_ANGLE_180(180); // 车身旋转至180
     delay(700);                                    // 延时700ms
-    SetSpeed(0.25, 0, 0, 1.5);                     // 向前开一段距离
+    SetSpeed(0.2, 0, 0, 1.5);                     // 向前开一段距离
   }
 }
 /**
@@ -706,7 +706,7 @@ void PART1() {
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
       if (notfind)
-        SetSpeed(-0.4, 0, 0, 0.4);
+        SetSpeed(0.4, 0, 0, 0.4);
 
       if (mine < 2) {
         pd = VisualFindBall(&robot, a, 0);
@@ -721,7 +721,7 @@ void PART1() {
         SetSpeed(distance_speed, 0, 0, distance_time); // 向前冲一段
         robot.servo[0]->setAngle(robot_left_off);    // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(robot_right_off);   // 爪子合拢（框放下）的角度
-        delay(100);
+        delay(400);
         SetSpeed(-1, 0, 0, 0.26);                   // 向后冲一段
         robot.servo[2]->setAngle(camera_angle_down); // 云台舵机向下
         delay(500);
