@@ -710,12 +710,10 @@ void PART1() {
   else {
     a = 0, b = 3, c = 2;
   } // 红方（通过读取拨码快速切换）
-  while (1) {
-    while (1) {
-      if (notfind != 0) {
-        find1();
-        notfind = 0;
-      }
+  while (robot_->ctrl_state == AUTO_OPERATION) {
+    while (robot_->ctrl_state == AUTO_OPERATION) {
+      if (notfind != 0)
+        MovePosition(home_x, home_y + notfind / 2., 0);
 
       if (mine < 2) {
         pd = VisualFindBall(&robot, a, 0);
@@ -723,6 +721,7 @@ void PART1() {
         pd = VisualFindBall(&robot, b, 1);
       }
       if (pd) {
+        notfind = 0;
         robot.imu_hold = true;                    // 陀螺仪保持
         robot.servo[0]->setAngle(robot_left_on);  // 爪子张开（框抬起）的角度
         robot.servo[1]->setAngle(robot_right_on); // 爪子张开（框抬起）的角度
@@ -749,7 +748,7 @@ void PART1() {
         notfind = notfind + 1; // notfind次数叠加(未找到的次数叠加)
     }
     go_home(); // 通过go_home函数用里程计走到安全区附近
-    while (1) {
+    while (robot_->ctrl_state == AUTO_OPERATION) {
       pd = VisualFindBall(&robot, c,
                           0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区
                               // 3,0只找蓝色球 4,0只找黄球 5,0只找黑球
