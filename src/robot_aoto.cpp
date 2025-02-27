@@ -10,8 +10,6 @@ namespace auto_ctrl {
 #define DEGREE_TO_RADIAN(degree) ((degree) * M_PI / 180.0)
 #define RADIAN_TO_DEGREE(radian) ((radian) * 180.0 / M_PI)
 
-
-
 static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，初始为NULL
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL
 struct position *current;                 // 定义当前位置结构体指针
@@ -348,9 +346,9 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
   if (!find_cnt)
     return 1;
   if (other)
-    return 1;
+    return 2;
   if (find_cnt > 1 && yellow)
-    return 1;
+    return 2;
   if (!self && mine < 2)
     return 1;
   return 0;
@@ -675,8 +673,8 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
             0; // y速度给0
                // int tmp = ((rotate_direction & 1) << 31) & 0x3f800000;
         robot->set_vel.angular_z = .85;
-            //(rotate_direction & 1) ? 1 : -1; //*(float *)&tmp;
-        if ((millis() - ft) > 10000)         // 判断距离上一次找球大于10s
+        //(rotate_direction & 1) ? 1 : -1; //*(float *)&tmp;
+        if ((millis() - ft) > 10000) // 判断距离上一次找球大于10s
         {
           return false; // 返回 false
         }
@@ -729,9 +727,11 @@ void PART1() {
         if (pd2) {
           robot.servo[0]->setAngle(robot_left_on);   // 爪子张开（框抬起）的角度
           robot.servo[1]->setAngle(robot_right_on);  // 爪子张开（框抬起）的角度
-          SetSpeed(0.7, 0, 0, 0.4);                // 向后移一段
+          SetSpeed(-.3, 0, 0, 0.3);                  // 向后移一段
           robot.servo[0]->setAngle(robot_left_off);  // 爪子合拢（框放下）的角度
           robot.servo[1]->setAngle(robot_right_off); // 爪子合拢（框放下）的角度
+          if (pd2 == 2)
+            SetSpeed(1, 0, 0, .3);
           robot.servo[2]->setAngle(camera_angle_up); // 云台舵机向上（抬头）
         } else {
           ++mine;
