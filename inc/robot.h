@@ -6,6 +6,16 @@
 #include "robot_driver.h"
 #include <stdint.h>
 
+#define robot_left_on 30
+#define robot_right_on -30
+#define robot_left_off -14
+#define robot_right_off 11
+#define camera_angle_up -22
+#define camera_angle_down -76
+#define distance_speed 0.6
+#define distance_time 0.5
+#define camera_acceleration 150
+
 typedef CFF::ChassisVelocities Velocities;
 
 enum CtrlState {
