@@ -77,8 +77,7 @@ void WaitStart() {
         robot.imu_hold = false;                   // 陀螺仪不保持
         // SetSpeed(0, 0,-7,1.25);//扫尾*1 （把球（物料）撞散）
         // SetSpeed(0, 0,7,1.25);//扫尾*2（把球（物料）撞散）
-        MovePosition(robot.current_pos.x, robot.current_pos.y,
-                     0); // 原地旋转到0度
+        MovePosition(robot.current_pos.x, robot.current_pos.y, 0); // 原地旋转到0度
         // robot.servo[0]->setAngle(30);//爪子张开（框抬起）的角度
         // robot.servo[1]->setAngle(-30);//爪子张开（框抬起）的角度
         // SetSpeed(-0.6, 0, 0,0.5);//向后退
@@ -88,10 +87,13 @@ void WaitStart() {
         PART1(); // 自动路径1
         break;
       case 2:
-        robot.servo[0]->setAngle(-5); // 爪子合拢（框放下）的角度
-        robot.imu_hold = true;        // 陀螺仪保持
-        SetSpeed(0.6, 0, 0, 0.85);    // 向前冲
-        PART1();                      // 自动路径1
+      robot.servo[0]->setAngle(robot_left_on);  // 爪子合拢（框放下）的角度
+      robot.servo[1]->setAngle(robot_right_on); // 爪子合拢（框放下）的角度
+      robot.imu_hold = true;                    // 陀螺仪保持
+      SetSpeed(0.7, 0, 0, 1.25);                // 向前冲
+      robot.imu_hold = false;                   // 陀螺仪不保持
+      MovePosition(robot.current_pos.x, robot.current_pos.y, 0); // 原地旋转到0度
+      PART2();                      // 自动路径1
         break;
       case 3:
         robot.servo[0]->setAngle(-5); // 爪子合拢（框放下）的角度
