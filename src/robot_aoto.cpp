@@ -674,8 +674,8 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
         robot->set_vel.linear_y =
             0; // y速度给0
                // int tmp = ((rotate_direction & 1) << 31) & 0x3f800000;
-        robot->set_vel.angular_z =
-            (rotate_direction & 1) ? 1 : -1; //*(float *)&tmp;
+        robot->set_vel.angular_z = .85;
+            //(rotate_direction & 1) ? 1 : -1; //*(float *)&tmp;
         if ((millis() - ft) > 10000)         // 判断距离上一次找球大于10s
         {
           return false; // 返回 false
