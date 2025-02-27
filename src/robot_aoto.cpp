@@ -568,11 +568,8 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
   static uint32_t rotate_direction;
   robot->imu_hold = false;          // 陀螺仪保持关闭
   robot->chassis_mode = SPEED_MODE; // 小车转换为速度模式
-  for (int i = 0; i < 300; ++i) {
-    if ((millis() - ct) > 15000) // 判断超时时间是否大于15秒
-    {
-      return false; // 返回false
-    }
+  for (int i = 0; i < 500; ++i) {
+
     if (robot->ctrl_state == MANUAL_OPERATION ||
         robot->ctrl_state == STARTUP_STATE) {
       return false; // 切换模式自动退出
@@ -640,13 +637,13 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
       }
     }
 
+    uint32_t dir = rotate_direction & 1;
+    dir = (dir << 1) - 1;
     if (find_ball != NULL) // 判断是否获取到符合条件的数据集合
     {
       // 定义两个常量为X,Y的向量差
       int16_t x;
       int16_t y;
-      uint32_t dir = rotate_direction & 1;
-      dir = (dir << 1) - 1;
       ft = millis();                                 // 更新上一次找球时间
       if (color == 1 or color == 2) {                // 判断是否为安全区
         x = 160 - (find_ball->x + find_ball->w / 2); // 不可调
@@ -724,7 +721,7 @@ void PART1() {
         robot.servo[1]->setAngle(robot_right_off);   // 爪子合拢（框放下）的角度
         SetSpeed(-0.7, 0, 0, 0.3);                   // 向后冲一段
         robot.servo[2]->setAngle(camera_angle_down); // 云台舵机向下
-        delay(300);
+        delay(400);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
         if (pd2) {
           robot.servo[0]->setAngle(robot_left_on);   // 爪子张开（框抬起）的角度
