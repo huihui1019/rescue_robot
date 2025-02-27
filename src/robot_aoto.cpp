@@ -736,7 +736,7 @@ void PART1() {
         if (pd2) {
           robot.servo[0]->setAngle(robot_left_on);   // 爪子张开（框抬起）的角度
           robot.servo[1]->setAngle(robot_right_on);  // 爪子张开（框抬起）的角度
-          SetSpeed(-0.25, 0, 0, 0.4);                // 向后移一段
+          SetSpeed(0.7, 0, 0, 0.4);                // 向后移一段
           robot.servo[0]->setAngle(robot_left_off);  // 爪子合拢（框放下）的角度
           robot.servo[1]->setAngle(robot_right_off); // 爪子合拢（框放下）的角度
           robot.servo[2]->setAngle(camera_angle_up); // 云台舵机向上（抬头）
