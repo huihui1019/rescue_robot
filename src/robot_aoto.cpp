@@ -637,8 +637,8 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
       }
     }
 
-    uint32_t dir = rotate_direction & 1;
-    dir = (dir << 1) - 1;
+    // uint32_t dir = rotate_direction & 1;
+    // dir = (dir << 1) - 1;
     if (find_ball != NULL) // 判断是否获取到符合条件的数据集合
     {
       // 定义两个常量为X,Y的向量差
@@ -656,7 +656,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
       robot->set_vel.linear_x = y * 0.0065; // 跟随太慢改比例系数 反运动加正负号
       robot->set_vel.linear_y = 0;          // 不适用横向平移量
       robot->set_vel.angular_z =
-          x * 0.0075 * dir; // 跟随太慢改比例系数 反运动加正负号
+          x * 0.0075; //* dir; // 跟随太慢改比例系数 反运动加正负号
 
       if (abs(x) <= 5 && abs(y) < 4) // 判断X,Y的向量差是否满足区间
       {
@@ -671,7 +671,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
         robot->set_vel.linear_y =
             0; // y速度给0
                // int tmp = ((rotate_direction & 1) << 31) & 0x3f800000;
-        robot->set_vel.angular_z = dir;
+        robot->set_vel.angular_z = 1;//dir;
         //(rotate_direction & 1) ? 1 : -1; //*(float *)&tmp;
         if ((millis() - ft) > 10000) // 判断距离上一次找球大于10s
         {
