@@ -714,21 +714,7 @@ void PART1() {
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
       if (notfind != 0)
-        // find[notfind - 1 & 3]();
-        switch (notfind) {
-        case 1:
-          find1(); // 移动到点位1
-          break;
-        case 2:
-          find2(); // 移动到点位2
-          break;
-        case 3:
-          find3(); // 移动到点位3
-          break;
-        case 4:
-          find4(); // 移动到点位4
-          break;
-        }
+        SetSpeed(-0.7, 0, 0, 0.3);
 
       if (mine < 2) {
         pd = VisualFindBall(&robot, a, 0);
