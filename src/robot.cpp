@@ -8,8 +8,8 @@ using namespace CFF;
 #define robot_right_off 13
 #define camera_angle_up -22
 #define camera_angle_down  -76
-#define distance_speed 0.7
-#define distance_time  0.45
+#define distance_speed 0.6
+#define distance_time  0.5
 
 #define camera_acceleration 150
 Robot_t robot;                   /**< 机器人对象 */
