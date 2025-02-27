@@ -713,7 +713,7 @@ void PART1() {
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
       if (notfind != 0)
-        MovePosition(home_x, home_y + notfind / 2., 0);
+        MovePosition(home_x, home_y - notfind / 2., 0);
 
       if (mine < 2) {
         pd = VisualFindBall(&robot, a, 0);
