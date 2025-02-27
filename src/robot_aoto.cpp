@@ -772,81 +772,45 @@ void PART1() {
   }
 }
 void PART2() {
-  if (io::getIN1()) {
-    a = 3;
-    b = 0;
-    c = 1;
-  } // 红方（通过读取拨码快速切换）
-  else {
-    a = 0;
-    b = 3;
-    c = 2;
+  if (robot_->team_color == RobotColor::BLUE) {
+    a = 3, b = 0, c = 1;
   } // 蓝方（通过读取拨码快速切换）
+  else {
+    a = 0, b = 3, c = 2;
+  } // 红方（通过读取拨码快速切换）
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
-      if (notfind != 0) {
-        switch (notfind) // 通过switch的值判断到那个找球点位
-        {
-        case 1:
-          find1(); // 移动到点位1
-          break;
-        case 2:
-          find2(); // 移动到点位2
-          break;
-        case 3:
-          find3(); // 移动到点位3
-          break;
-        case 4:
-          find4(); // 移动到点位4
-          break;
-        }
-      }
-      if (mine < 2) {
-        pd = VisualFindBall(
-            &robot, a, 0); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区
-                           // 3,0只找蓝色球 4,0只找黄球 5,0只找黑球
-                           // 0,1除了红球以外的球 3,1除了蓝球以外的球
-      } else {
-        pd = VisualFindBall(
-            &robot, b, 1); // 0,0只找红球 1,0只找蓝色安全区 2,0只找红色安全区
-                           // 3,0只找蓝色球 4,0只找黄球 5,0只找黑球
-                           // 0,1除了红球以外的球 3,1除了蓝球以外的球
-      }
+      if (notfind != 0)
+        SetSpeed(-0.7, 0, 0, 0.3);
+
+      pd = VisualFindBall(&robot, b, 1);
       if (pd) {
-        robot.imu_hold = true;         // 陀螺仪保持
-        robot.servo[2]->setAngle(125); // 云台舵机向下（低头）
-        SetSpeed(0.3, 0, 0, 0.35);     // 向前冲一段
-        delay(20);
-        robot.servo[0]->setAngle(-35);    // 爪子张开（框抬起）的角度
-        robot.servo[1]->setAngle(100);    // 爪子张开（框抬起）的角度
-        delay(20);                        // 延时20ms
-        SetSpeed(0.35, 0, 0, 0.35);       // 向前冲一段
-        delay(20);                        // 延时20ms
-        robot.servo[0]->setAngle(-60);    // 爪子合拢（框放下）的角度
-        robot.servo[1]->setAngle(124);    // 爪子合拢（框放下）的角度
-        delay(500);                       // 延时300ms
+        notfind = 0;
+        robot.imu_hold = true;                    // 陀螺仪保持
+        robot.servo[0]->setAngle(robot_left_on);  // 爪子张开（框抬起）的角度
+        robot.servo[1]->setAngle(robot_right_on); // 爪子张开（框抬起）的角度
+        SetSpeed(distance_speed, 0, 0, distance_time); // 向前冲一段
+        robot.servo[0]->setAngle(robot_left_off);    // 爪子合拢（框放下）的角度
+        robot.servo[1]->setAngle(robot_right_off);   // 爪子合拢（框放下）的角度
+        SetSpeed(-0.7, 0, 0, 0.3);                   // 向后冲一段
+        robot.servo[2]->setAngle(camera_angle_down); // 云台舵机向下
+        delay(400);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
-        if (pd2 == 1) {
-          mine = mine + 1;              // mine次数叠加(找到的次数叠加)
-          robot.servo[2]->setAngle(97); // 云台舵机向上（抬头）
-          delay(100);                   // 延时100ms
-          break;
-        } else if (pd2 == 2) {
-          robot.servo[0]->setAngle(-35); // 爪子张开（框抬起）的角度
-          robot.servo[1]->setAngle(100); // 爪子张开（框抬起）的角度
-          SetSpeed(-0.25, 0, 0, 0.4);    // 向后移一段
-          robot.servo[0]->setAngle(-60); // 爪子合拢（框放下）的角度
-          robot.servo[1]->setAngle(124); // 爪子合拢（框放下）的角度
-          robot.servo[2]->setAngle(97);  // 云台舵机向上（抬头）
-          delay(100);                    // 延时100ms
+        if (pd2) {
+          robot.servo[0]->setAngle(robot_left_on);   // 爪子张开（框抬起）的角度
+          robot.servo[1]->setAngle(robot_right_on);  // 爪子张开（框抬起）的角度
+          SetSpeed(-.3, 0, 0, 0.3);                  // 向后移一段
+          robot.servo[0]->setAngle(robot_left_off);  // 爪子合拢（框放下）的角度
+          robot.servo[1]->setAngle(robot_right_off); // 爪子合拢（框放下）的角度
+          if (pd2 == 2)
+            SetSpeed(1, 0, 0, .3);
+          robot.servo[2]->setAngle(camera_angle_up); // 云台舵机向上（抬头）
         } else {
-          robot.servo[2]->setAngle(97); // 云台舵机向上（抬头）
-          delay(100);                   // 延时100ms
+          robot.servo[2]->setAngle(camera_angle_up); // 云台舵机向上（抬头）
+          break;
         }
-      }
-      if (!pd && robot_->ctrl_state == AUTO_OPERATION) {
+      } else
         notfind = notfind + 1; // notfind次数叠加(未找到的次数叠加)
-      }
     }
     go_home(); // 通过go_home函数用里程计走到安全区附近
     while (robot_->ctrl_state == AUTO_OPERATION) {
@@ -855,13 +819,13 @@ void PART2() {
                               // 3,0只找蓝色球 4,0只找黄球 5,0只找黑球
                               // 0,1除了红球以外的球 3,1除了蓝球以外的球
       if (pd) {
-        robot.imu_hold = true;          // 陀螺仪保持
-        delay(300);                     // 延时300ms
-        corner_angle();                 // 调整车身姿态
-        delay(300);                     // 延时300ms
-        robot.servo[0]->setAngle(-40);  // 爪子张开（框抬起）的角度
-        robot.servo[1]->setAngle(104);  // 爪子张开（框抬起）的角度
-        delay(500);                     // 延时500ms
+        robot.imu_hold = true; // 陀螺仪保持
+        // delay(300);// 延时300ms
+        corner_angle(); // 调整车身姿态
+        // delay(300);// 延时300ms
+        robot.servo[0]->setAngle(robot_left_on);
+        robot.servo[1]->setAngle(robot_right_on);
+        // delay(500);// 延时500ms
         home_x = robot_->current_pos.x; // 安全区的里程计相对坐标X刷新
         home_y = robot_->current_pos.y; // 安全区的里程计相对坐标Y刷新
         break;
@@ -872,13 +836,12 @@ void PART2() {
         delay(300);                 // 延时300ms
       }
     }
-    robot.imu_hold = false;        // 陀螺仪保持
-    SetSpeed(-0.5, 0, 0, 0.5);     // 后退一段距离
-    SetSpeed(0, 0, 0.8, 1.6);      // 后退一段距离
-    robot.servo[0]->setAngle(-60); // 爪子合拢（框放下）的角度
-    robot.servo[1]->setAngle(124); // 爪子合拢（框放下）的角度
+    robot.imu_hold = false;                    // 陀螺仪保持
+    SetSpeed(-0.5, 0, 0, 0.5);                 // 后退一段距离
+    SetSpeed(0, 0, 0.8, 1.6);                  // 后退一段距离
+    robot.servo[0]->setAngle(robot_left_off);  // 爪子合拢（框放下）的角度
+    robot.servo[1]->setAngle(robot_right_off); // 爪子合拢（框放下）的角度
   }
-  return; // 返回
 }
 
 void find1() {

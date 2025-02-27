@@ -6,6 +6,7 @@ using namespace CFF;
 
 Robot_t robot;                   /**< 机器人对象 */
 ChassisKinematics *chassis;      /**< 底盘运动学对象 */
+
 Gamepad_t *gamepad;              /**< 手柄对象 */
 HubMotorPort *motor_port;        /**< 电机端口对象 */
 ServoPort *servo_port;           /**< 舵机端口对象 */
