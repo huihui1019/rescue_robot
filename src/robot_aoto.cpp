@@ -17,7 +17,7 @@ namespace auto_ctrl {
 #define camera_angle_up -22
 #define camera_angle_down -76
 #define distance_speed 0.6
-#define distance_time  0.5
+#define distance_time 0.5
 
 static rt_thread_t auto_thread = RT_NULL; // 定义自动控制线程句柄，初始为NULL
 static Robot_t *robot_ = NULL;            // 定义机器人指针，初始为NULL
@@ -334,7 +334,7 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
   visual_t *find_ball = NULL; // 最后符合条件的数据集合
   uint32_t jl = 9999999;      // 定义一个距离变量为无限大即可
   uint8_t find_cnt = 0;
-  bool yellow = 0, other = 0;
+  bool yellow = 0, other = 0, self = 0;
   for (uint8_t i = 0; i < 14; i++) // for循环遍历14次
   {
     delay(1);                      // 延时1ms
@@ -344,8 +344,10 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
       ++find_cnt;
       if (4 == ball_tmp->type)
         yellow = 1;
-      else if (color == ball_tmp->type)
+      else if (b == ball_tmp->type)
         other = 1;
+      else if (a == ball_tmp->type)
+        self = 1;
     }
   }
 
@@ -354,6 +356,8 @@ int certain_ball(Robot_t *robot, uint8_t color, uint8_t pd) {
   if (other)
     return 1;
   if (find_cnt > 1 && yellow)
+    return 1;
+  if (!self && mine < 2)
     return 1;
   return 0;
 }
@@ -673,10 +677,12 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
     } else {
       if ((millis() - ft) > 250) {   // 判断距离上次找球是否大于250ms
         robot->set_vel.linear_x = 0; // x速度给0
-        robot->set_vel.linear_y = 0; // y速度给0
-		//int tmp = ((rotate_direction & 1) << 31) & 0x3f800000;
-        robot->set_vel.angular_z = (rotate_direction & 1) ? 1 : -1; //*(float *)&tmp; 
-        if ((millis() - ft) > 10000)              // 判断距离上一次找球大于10s
+        robot->set_vel.linear_y =
+            0; // y速度给0
+               // int tmp = ((rotate_direction & 1) << 31) & 0x3f800000;
+        robot->set_vel.angular_z =
+            (rotate_direction & 1) ? 1 : -1; //*(float *)&tmp;
+        if ((millis() - ft) > 10000)         // 判断距离上一次找球大于10s
         {
           return false; // 返回 false
         }
