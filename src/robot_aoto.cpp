@@ -33,11 +33,12 @@ void Turn_angle();            // 控制底盘转向（1.05，-0.95）方向
 void Turn_angle2();           // 控制底盘转向（1.05，-0.35）方向
 void corner_angle();          // 控制整车放球时的姿态
 void PART1();                 // 自动逻辑1（不带低头检测）#官方案例路线
-void PART2();   // 自动逻辑2（带低头检测）#使用此路线需把云台架高至合适高度
-void find1();   // 通过里程计跑到find1位置(左下角)
-void find2();   // 通过里程计跑到find2位置(右下角)
-void find3();   // 通过里程计跑到find3位置(右上角)
-void find4();   // 通过里程计跑到find4位置(左上角)
+void PART2(); // 自动逻辑2（带低头检测）#使用此路线需把云台架高至合适高度
+void find1(); // 通过里程计跑到find1位置(左下角)
+void find2(); // 通过里程计跑到find2位置(右下角)
+void find3(); // 通过里程计跑到find3位置(右上角)
+void find4(); // 通过里程计跑到find4位置(左上角)
+static void (*find[4])(void) = {find1, find2, find3, find4};
 void go_home(); // 通过里程计大致跑家函数
 void only_one(); // 可以读舵机角度查看是否堵转，检测是否为多个（对机构有严格要求）
 bool certain_home(Robot_t *robot, uint8_t color,
@@ -713,7 +714,7 @@ void PART1() {
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
       if (notfind != 0)
-        MovePosition(home_x - notfind / 2. + 2, home_y + notfind / 2. + 1, 0);
+        find[notfind & 3]();
 
       if (mine < 2) {
         pd = VisualFindBall(&robot, a, 0);
