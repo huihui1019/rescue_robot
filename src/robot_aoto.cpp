@@ -645,6 +645,8 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
       // 定义两个常量为X,Y的向量差
       int16_t x;
       int16_t y;
+      uint32_t dir = rotate_direction & 1;
+      dir = (dir << 1) - 1;
       ft = millis();                                 // 更新上一次找球时间
       if (color == 1 or color == 2) {                // 判断是否为安全区
         x = 160 - (find_ball->x + find_ball->w / 2); // 不可调
@@ -657,7 +659,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
       robot->set_vel.linear_x = y * 0.0065; // 跟随太慢改比例系数 反运动加正负号
       robot->set_vel.linear_y = 0;          // 不适用横向平移量
       robot->set_vel.angular_z =
-          x * 0.0075; // 跟随太慢改比例系数 反运动加正负号
+          x * 0.0075 * dir; // 跟随太慢改比例系数 反运动加正负号
 
       if (abs(x) <= 5 && abs(y) < 4) // 判断X,Y的向量差是否满足区间
       {
@@ -672,7 +674,7 @@ uint8_t VisualFindBall(Robot_t *robot, uint8_t color, uint8_t pd) {
         robot->set_vel.linear_y =
             0; // y速度给0
                // int tmp = ((rotate_direction & 1) << 31) & 0x3f800000;
-        robot->set_vel.angular_z = .85;
+        robot->set_vel.angular_z = dir;
         //(rotate_direction & 1) ? 1 : -1; //*(float *)&tmp;
         if ((millis() - ft) > 10000) // 判断距离上一次找球大于10s
         {
