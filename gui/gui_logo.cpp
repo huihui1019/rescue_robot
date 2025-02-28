@@ -48,7 +48,6 @@ void gui_logo_init(lv_obj_t *root) {
   lv_obj_clear_flag(parent_root, LV_OBJ_FLAG_SCROLLABLE);
 }
 
-void gui_logo_focus() { // logo_anim_start();
-}
+void gui_logo_focus() { logo_anim_start(); }
 
 void gui_logo_del(void) {}
