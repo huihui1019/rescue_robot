@@ -783,9 +783,9 @@ void PART2() {
   } // 红方（通过读取拨码快速切换）
   while (robot_->ctrl_state == AUTO_OPERATION) {
     while (robot_->ctrl_state == AUTO_OPERATION) {
-      if (notfind != 0)
-        SetSpeed(-0.7, 0, 0, 0.3);
-        pd = VisualFindBall(&robot, b, 1);
+      if (notfind)
+        SetSpeed(0.4, 0, 0, 0.4);
+      pd = VisualFindBall(&robot, b, 1);
       if (pd) {
         notfind = 0;
         robot.imu_hold = true;                    // 陀螺仪保持
@@ -794,8 +794,8 @@ void PART2() {
         SetSpeed(distance_speed, 0, 0, distance_time); // 向前冲一段
         robot.servo[0]->setAngle(robot_left_off);    // 爪子合拢（框放下）的角度
         robot.servo[1]->setAngle(robot_right_off);   // 爪子合拢（框放下）的角度
-        delay(100);
-        SetSpeed(-0.7, 0, 0, 0.5);                   // 向后冲一段
+        // delay(400);
+        SetSpeed(-1, 0, 0, 0.2);                   // 向后冲一段
         robot.servo[2]->setAngle(camera_angle_down); // 云台舵机向下
         delay(500);
         pd2 = certain_ball(&robot, b, 1); // 检测里面的球是否不为对方颜色
